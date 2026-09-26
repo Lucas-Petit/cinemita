@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cinemita — Cines independientes de Buenos Aires</title>
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Cinemita</h1>
+    <p class="tagline">Cines independientes de Buenos Aires</p>
+    <div class="header-actions">
+      <span id="demoBadge" class="hidden">Modo demo — los datos solo viven en este navegador</span>
+      <button id="locateBtn" class="btn secondary" title="Mostrar cines ordenados por distancia a tu ubicación">
+        📍 Cerca de mí
+      </button>
+      <button id="registerBtn" class="btn primary">Registrar mi cine</button>
+    </div>
+  </header>
+
+  <main>
+    <aside id="sidebar">
+      <h2 id="sidebarTitle">Todos los cines</h2>
+      <div id="cinemaList" class="cinema-list">
+        <p class="empty">Cargando…</p>
+      </div>
+    </aside>
+    <div id="map"></div>
+  </main>
+
+  <!-- Registration modal -->
+  <div id="registerModal" class="modal hidden">
+    <div class="modal-content">
+      <button class="modal-close" data-close>&times;</button>
+      <h2 id="registerModalTitle">Registrar mi cine</h2>
+      <form id="registerForm">
+        <label>Nombre del cine *
+          <input type="text" name="name" required maxlength="120" placeholder="Cine Club Cosmos" />
+        </label>
+        <label>Dirección
+          <div class="address-row">
+            <input type="text" name="address" maxlength="200" placeholder="Av. Corrientes 1234" />
+            <button type="button" id="searchAddressBtn" class="btn secondary small">Buscar</button>
+          </div>
+          <ul id="addrResults" class="addr-results hidden"></ul>
+        </label>
+        <p class="hint">Hacé clic en el mapa para ubicar tu cine *</p>
+        <div id="pickMap"></div>
+        <p id="pickedCoords" class="coords">Sin ubicación seleccionada</p>
+        <label>Descripción
+          <textarea name="description" maxlength="1000" rows="2" placeholder="Cine club barrial con programación de autor…"></textarea>
+        </label>
+        <label>Sitio web
+          <input type="text" name="website" maxlength="300" placeholder="micine.com.ar" />
+        </label>
+        <p id="registerError" class="error hidden"></p>
+        <button type="submit" id="registerSubmitBtn" class="btn primary">Registrar cine</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Cinema detail / manage panel -->
+  <div id="detailModal" class="modal hidden">
+    <div class="modal-content">
+      <button class="modal-close" data-close>&times;</button>
+      <div id="detailBody"></div>
+    </div>
+  </div>
+
+  <script src="vendor/leaflet/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

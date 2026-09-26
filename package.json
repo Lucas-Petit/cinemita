@@ -1,0 +1,14 @@
+{
+  "name": "cinemita",
+  "version": "1.0.0",
+  "description": "Mapa de cines independientes de Buenos Aires con funciones semanales",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "leaflet": "^1.9.4"
+  }
+}

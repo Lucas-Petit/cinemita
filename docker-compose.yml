@@ -1,0 +1,11 @@
+services:
+  cinemita:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - cinemita-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  cinemita-data:
