@@ -71,6 +71,16 @@ viernes,Relatos salvajes,22:00,"Sala 2, 35mm"
 
 Node.js + Express · Leaflet + OpenStreetMap · persistencia en `data/db.json`.
 
+## Versión estática (GitHub Pages)
+
+`node build-static.js` genera `dist-static/` con la app sin backend. Al no
+encontrar la API entra en **modo demo**: los cines de ejemplo se cargan desde
+`data/seed.json` y todo lo que se registre se guarda en el `localStorage` del
+navegador (no se comparte entre visitantes — el Docker sigue siendo la versión
+"real" con datos compartidos).
+
+La rama `gh-pages` contiene esa build servida por GitHub Pages.
+
 ## API
 
 | Método | Ruta | Descripción |
