@@ -103,11 +103,18 @@ const demoDb = {
   },
   save(db) { localStorage.setItem(DEMO_DB_KEY, JSON.stringify(db)); },
   async init() {
-    if (!localStorage.getItem(DEMO_DB_KEY)) {
-      const seed = await (await fetch('data/seed.json')).json();
-      this.save(seed);
+    const db = this.load();
+    const seed = await (await fetch('data/seed.json')).json();
+    // Mezcla con el seed: agrega cines que falten y completa campos nuevos
+    // (p. ej. poster) en los que ya estaban guardados de una versión anterior.
+    let changed = false;
+    for (const s of seed.cinemas) {
+      const existing = db.cinemas.find(c => c.name === s.name);
+      if (!existing) { db.cinemas.push(s); changed = true; }
+      else if (s.poster && !existing.poster) { existing.poster = s.poster; changed = true; }
     }
-    return this.load().cinemas;
+    if (changed || !localStorage.getItem(DEMO_DB_KEY)) this.save(db);
+    return db.cinemas;
   }
 };
 
@@ -349,7 +356,7 @@ function popupHtml(c) {
     : '<p class="hint">Todavía no hay funciones cargadas.</p>';
   return `
     <div class="popup">
-      ${c.poster ? `<img class="popup-cover" src="${esc(c.poster)}" alt="" loading="lazy" onerror="this.remove()" />` : ''}
+      ${c.poster ? `<img class="popup-cover" src="${esc(c.poster)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()" />` : ''}
       <strong>${esc(c.name)}</strong><br>
       <span class="addr">${esc(c.address || '')}</span>
       ${schedule}
@@ -412,7 +419,7 @@ function renderList() {
       : '<p class="next none">Sin funciones cargadas</p>';
     return `
       <div class="cinema-card" data-id="${c.id}">
-        ${c.poster ? `<img class="card-cover" src="${esc(c.poster)}" alt="" loading="lazy" onerror="this.remove()" />` : ''}
+        ${c.poster ? `<img class="card-cover" src="${esc(c.poster)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()" />` : ''}
         <div class="card-body">
           <h3>${esc(c.name)}${isOwner ? '<span class="owner-badge">tu cine</span>' : ''}</h3>
           <p class="addr">${esc(c.address || 'Sin dirección')}</p>
@@ -466,7 +473,7 @@ function renderCartelera() {
     const img = s.poster || c.poster;
     return `
       <div class="cart-item${past ? ' past' : ''}" data-id="${c.id}">
-        ${img ? `<img class="cart-poster" src="${esc(img)}" alt="" loading="lazy" onerror="this.remove()" />` : ''}
+        ${img ? `<img class="cart-poster" src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()" />` : ''}
         <span class="cart-time">${esc(s.time)}</span>
         <div>
           <span class="cart-movie">${esc(s.movie)}${s.date ? ` <span class="cart-date">· ${fmtDate(s.date)}</span>` : ''}</span>
@@ -542,7 +549,7 @@ window.openDetail = function (id) {
     for (const s of grouped.get(d) || []) {
       if (s.date && s.date < today) continue; // función única ya pasada
       const poster = s.poster
-        ? `<img class="sched-poster" src="${esc(s.poster)}" alt="" loading="lazy" onerror="this.remove()" />`
+        ? `<img class="sched-poster" src="${esc(s.poster)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()" />`
         : '';
       rows += `<tr><td>${screeningLabel(s)}</td><td>${esc(s.time)} — ${poster}<strong>${esc(s.movie)}</strong>` +
         `${s.notes ? ` <span class="notes">(${esc(s.notes)})</span>` : ''}</td></tr>`;
@@ -618,7 +625,7 @@ window.openDetail = function (id) {
   }
 
   document.getElementById('detailBody').innerHTML = `
-    ${c.poster ? `<img class="detail-cover" src="${esc(c.poster)}" alt="" loading="lazy" onerror="this.remove()" />` : ''}
+    ${c.poster ? `<img class="detail-cover" src="${esc(c.poster)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()" />` : ''}
     <h2>${esc(c.name)}</h2>
     <p class="detail-addr">${esc(c.address || '')}</p>
     ${c.description ? `<p class="desc">${esc(c.description)}</p>` : ''}

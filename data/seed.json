@@ -1,8 +1,8 @@
 {
   "cinemas": [
     {
-      "id": "30331343-7321-47d5-8889-d01d9b9db349",
-      "ownerToken": "eac47055-3d8d-49d6-ab5f-ca9acf192e0e",
+      "id": "eff70285-9ef4-42f2-9cfb-02c065ff53f8",
+      "ownerToken": "d2c8e80b-32cf-4487-9545-9ad77704f761",
       "name": "Cine Gaumont (Espacio INCAA)",
       "address": "Av. Rivadavia 1635, Congreso",
       "description": "Sala del INCAA dedicada a cine argentino e independiente.",
@@ -12,39 +12,39 @@
       "lng": -58.3917,
       "screenings": [
         {
-          "id": "ac651888-7aeb-4364-8bf1-3a0dec6f10ff",
+          "id": "ea1cae77-b559-4dc5-be5b-197a666246f2",
           "movie": "Relatos salvajes",
           "day": 4,
           "time": "21:00",
           "notes": "Ciclo cine argentino"
         },
         {
-          "id": "eb1b5b9f-7f72-4c0d-83d2-45628a3b2ca6",
+          "id": "e50bf796-c0cc-4aa4-b78b-b3e05c7db33a",
           "movie": "Nueve reinas",
           "day": 5,
           "time": "19:30",
           "notes": ""
         },
         {
-          "id": "e2815458-c59f-43c7-bd58-4ba4de52fdf5",
+          "id": "1c69ea39-4755-4a8a-a829-30ddbfcb8623",
           "movie": "La ciénaga",
           "day": 6,
           "time": "18:00",
           "notes": "Copia restaurada"
         },
         {
-          "id": "198e3267-6c21-4359-91d7-46bab70cada3",
+          "id": "ac7bc461-bf8a-4d6e-b3cb-d5e16804017d",
           "movie": "El ciudadano ilustre",
           "day": 0,
           "time": "20:30",
           "notes": ""
         }
       ],
-      "createdAt": "2026-09-30T00:39:23.385Z"
+      "createdAt": "2026-09-30T00:55:18.557Z"
     },
     {
-      "id": "831047d9-2e02-4608-8707-ed0b8cb8ae33",
-      "ownerToken": "d1cff9c8-566c-447a-a0d6-ce6e434f624a",
+      "id": "5530b0bc-0d6c-4353-a53a-6759d787af38",
+      "ownerToken": "977cb7a6-651e-4202-8287-304aac9a158d",
       "name": "Cine Cosmos UBA",
       "address": "Av. Corrientes 2046, Centro",
       "description": "Cine club universitario, programación de culto y de autor.",
@@ -54,32 +54,32 @@
       "lng": -58.3968,
       "screenings": [
         {
-          "id": "0493f6a0-2eec-44e1-aa59-6b7aa24023d7",
+          "id": "ca2823e7-8482-49dd-8883-b855cd0e2a56",
           "movie": "Zama",
           "day": 2,
           "time": "20:00",
           "notes": "Debate posterior"
         },
         {
-          "id": "0be5a6c5-3241-4b3b-82d7-0e081937999c",
+          "id": "09a96735-ceef-445e-a257-0be3fdbf1274",
           "movie": "Cléo de 5 a 7",
           "day": 4,
           "time": "19:00",
           "notes": "Ciclo Agnès Varda"
         },
         {
-          "id": "001a0443-07c5-4b09-bc92-8987cfb97838",
+          "id": "fafc224c-0bf9-4386-93ea-dcc0278ca968",
           "movie": "Historia mínima",
           "day": 6,
           "time": "17:30",
           "notes": ""
         }
       ],
-      "createdAt": "2026-09-30T00:39:23.386Z"
+      "createdAt": "2026-09-30T00:55:18.558Z"
     },
     {
-      "id": "e30d1d3a-b84c-4300-a313-4f1ce26fb3ca",
-      "ownerToken": "7d79b41f-3d66-443a-b517-97330b1671ca",
+      "id": "b8218da3-6759-49db-bd1d-39eb96919dcd",
+      "ownerToken": "d5745bdb-3aed-40c3-96eb-48d15ee770f4",
       "name": "MALBA Cine",
       "address": "Av. Figueroa Alcorta 3415, Palermo",
       "description": "Cine del museo MALBA: estrenos de autor y ciclos temáticos.",
@@ -89,32 +89,32 @@
       "lng": -58.4137,
       "screenings": [
         {
-          "id": "cd67a920-23f1-4a3d-9916-1326d338e978",
+          "id": "87869f53-6ad5-4ad8-9f0e-349fa2a22441",
           "movie": "El faro",
           "day": 3,
           "time": "21:30",
           "notes": ""
         },
         {
-          "id": "101e2bfa-8b57-4cfc-87ec-ba8b1d8b2e08",
+          "id": "a8395eaa-9e52-49d8-84ca-70085dd899d5",
           "movie": "La odisea de los giles",
           "day": 5,
           "time": "20:00",
           "notes": ""
         },
         {
-          "id": "4dccbc14-b570-4ad6-8bf0-8d7388aa2798",
+          "id": "9d6fc18a-9f73-440d-b114-4e521cde6e34",
           "movie": "Retrato de una mujer en llamas",
           "day": 6,
           "time": "19:00",
           "notes": "Subtitulada"
         }
       ],
-      "createdAt": "2026-09-30T00:39:23.386Z"
+      "createdAt": "2026-09-30T00:55:18.558Z"
     },
     {
-      "id": "e5688e3f-534c-4875-8b7c-1c6d6731401a",
-      "ownerToken": "8ccba680-b7cb-453b-851f-0fad7ac6f675",
+      "id": "42d63ef8-31fd-4298-b49b-b5b0cc70eda2",
+      "ownerToken": "fb952d4a-fac9-417c-8983-3c74ba53a22f",
       "name": "Cine Teatro 25 de Mayo",
       "address": "Av. Triunvirato 4439, Villa Urquiza",
       "description": "Sala barrial municipal con funciones de cine nacional.",
@@ -124,25 +124,25 @@
       "poster": "https://commons.wikimedia.org/wiki/Special:FilePath/Complejo_Cultural_Teatro_25_de_Mayo_Villa_Urquiza.jpg?width=800",
       "screenings": [
         {
-          "id": "3744a088-21d2-4d2a-8dc8-092b64d28120",
+          "id": "3afcd971-bb40-46c7-bda6-db05e5582257",
           "movie": "El secreto de sus ojos",
           "day": 5,
           "time": "21:00",
           "notes": "Entrada gratuita"
         },
         {
-          "id": "91ab89b4-4e73-4236-83a9-42b5cd8751ed",
+          "id": "7b13f239-2f35-4a1c-ad57-2441cfdd1690",
           "movie": "Un cuento chino",
           "day": 6,
           "time": "18:30",
           "notes": "Función familiar"
         }
       ],
-      "createdAt": "2026-09-30T00:39:23.386Z"
+      "createdAt": "2026-09-30T00:55:18.558Z"
     },
     {
-      "id": "7ce02b86-5f57-44d5-8176-219080650fb7",
-      "ownerToken": "d2d604a4-465a-4027-bb8e-bc531171d2dd",
+      "id": "063e6e63-097f-45ee-a26f-bf301128a18e",
+      "ownerToken": "01136503-b8ad-41d1-99bb-76cd0a84f1ec",
       "name": "Alianza Francesa",
       "address": "Av. Córdoba 946, Centro",
       "description": "Sala de la Alianza Francesa: cine francófono y europeo.",
@@ -152,32 +152,32 @@
       "lng": -58.3807,
       "screenings": [
         {
-          "id": "faeaf831-9497-4538-b666-733985451046",
+          "id": "57f1fa3d-6ea2-4ae6-8fb9-ba2216e17e6f",
           "movie": "Amélie",
           "day": 1,
           "time": "19:00",
           "notes": "VOSE"
         },
         {
-          "id": "8954ce06-e279-4ad1-9cf8-e28182b77a9d",
+          "id": "6f95d22d-2f73-438e-b7a5-6517c0af0a83",
           "movie": "La clase",
           "day": 3,
           "time": "20:30",
           "notes": "Cine debate"
         },
         {
-          "id": "d2a8b171-62b3-4f3e-abb2-2e3b660f3f2c",
+          "id": "f29b0ed0-7134-4453-975f-56413b40a660",
           "movie": "El niño de la bicicleta",
           "day": 6,
           "time": "17:00",
           "notes": "Dardenne"
         }
       ],
-      "createdAt": "2026-09-30T00:39:23.386Z"
+      "createdAt": "2026-09-30T00:55:18.558Z"
     },
     {
-      "id": "f60835d4-02d3-4089-89f3-3ebb83953994",
-      "ownerToken": "9fda5825-41e0-4ac2-aa27-c01874ef27e5",
+      "id": "2a76aa51-721b-4cf0-b426-2d7ae1fb55e5",
+      "ownerToken": "f8c02009-fd8b-440c-924c-56c06a527a34",
       "name": "Patio de los Lecheros",
       "address": "Donato Álvarez 175, Caballito",
       "description": "Espacio cultural barrial con proyecciones al aire libre.",
@@ -187,21 +187,21 @@
       "poster": "https://commons.wikimedia.org/wiki/Special:FilePath/Cine_al_Aire_Libre-_'The_Artist'.jpg?width=800",
       "screenings": [
         {
-          "id": "660df16c-34e1-4f6e-9448-29da83dd8a5a",
+          "id": "4eda10ed-a36e-44ee-8138-9fa683cfa810",
           "movie": "Esperando la carroza",
           "day": 4,
           "time": "21:00",
           "notes": "A cielo abierto"
         },
         {
-          "id": "011f01a4-6e89-49c9-8a93-a7d20df31d64",
+          "id": "38a2d981-acf9-4036-81af-a3f585c8562f",
           "movie": "El clan",
           "day": 5,
           "time": "21:00",
           "notes": "A cielo abierto"
         }
       ],
-      "createdAt": "2026-09-30T00:39:23.386Z"
+      "createdAt": "2026-09-30T00:55:18.558Z"
     }
   ]
 }
