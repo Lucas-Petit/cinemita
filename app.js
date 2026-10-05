@@ -116,6 +116,10 @@ function track(cinemaId, type) {
 // ---------- modo demo (sin backend: datos en localStorage) ----------
 let DEMO = false;
 const DEMO_DB_KEY = 'cinemita_demo_db';
+// Subir este número cuando cambie data/seed.json: refresca los cines del seed
+// en navegadores que ya tenían una copia vieja (sin tocar los que el usuario creó).
+const DEMO_SEED_VERSION = '2';
+const DEMO_SEED_KEY = 'cinemita_demo_seed_v';
 
 const demoDb = {
   load() {
@@ -126,6 +130,20 @@ const demoDb = {
   async init() {
     const db = this.load();
     const seed = await (await fetch('data/seed.json')).json();
+    if (localStorage.getItem(DEMO_SEED_KEY) !== DEMO_SEED_VERSION) {
+      // Seed nuevo: reemplaza los cines del seed (conservando sus stats) y
+      // mantiene los que el usuario registró en este navegador.
+      const seedNames = new Set(seed.cinemas.map(c => c.name));
+      const userCinemas = db.cinemas.filter(c => !seedNames.has(c.name));
+      for (const s of seed.cinemas) {
+        const prev = db.cinemas.find(c => c.name === s.name);
+        if (prev && prev.stats) s.stats = prev.stats;
+      }
+      db.cinemas = [...seed.cinemas, ...userCinemas];
+      localStorage.setItem(DEMO_SEED_KEY, DEMO_SEED_VERSION);
+      this.save(db);
+      return db.cinemas;
+    }
     // Mezcla con el seed: agrega cines que falten y completa campos nuevos
     // (p. ej. poster) en los que ya estaban guardados de una versión anterior.
     let changed = false;
