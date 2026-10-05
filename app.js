@@ -4,6 +4,17 @@ const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', '
 const DAY_SHORT = ['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa', 'Do'];
 const BA_CENTER = [-34.6037, -58.3816];
 
+// Vocabulario compartido con el servidor (ver /api/meta)
+const PRICE_ORDER = ['gratis', 'bajo', 'medio', 'alto'];
+const PRICE_LABELS = { gratis: 'Gratis', bajo: '$', medio: '$$', alto: '$$$' };
+const AGE_LABELS = { atp: 'ATP', '13': '+13', '16': '+16', '18': '+18' };
+const TIME_SLOTS = [
+  { id: 'manana', label: 'Mañana (6–12)', from: 6, to: 12 },
+  { id: 'tarde', label: 'Tarde (12–18)', from: 12, to: 18 },
+  { id: 'noche', label: 'Noche (18–24)', from: 18, to: 24 },
+  { id: 'madrugada', label: 'Madrugada (0–6)', from: 0, to: 6 }
+];
+
 const state = {
   cinemas: [],
   markers: new Map(),
@@ -16,6 +27,7 @@ const state = {
   tab: 'cinemas',
   query: '',
   onlyToday: false,
+  filters: { price: '', time: '', radius: 0 },
   carteleraDay: jsDayToOurs(new Date().getDay()),
 };
 
@@ -92,6 +104,15 @@ async function remoteApi(path, options = {}) {
   return data;
 }
 
+// Métrica anónima para el panel del dueño: vistas y clics de intención.
+function track(cinemaId, type) {
+  api(`api/cinemas/${cinemaId}/track`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type })
+  }).catch(() => {});
+}
+
 // ---------- modo demo (sin backend: datos en localStorage) ----------
 let DEMO = false;
 const DEMO_DB_KEY = 'cinemita_demo_db';
@@ -130,14 +151,25 @@ function normalizeWebsiteDemo(w) {
   } catch { return null; }
 }
 
+function normalizePhoneDemo(v) {
+  const p = (v || '').trim().slice(0, 30).replace(/[\s().-]/g, '');
+  if (!p) return '';
+  if (!/^\+?\d{6,15}$/.test(p)) throw new Error('Teléfono inválido');
+  return p;
+}
+
 function demoScreening(b) {
   const movie = (b.movie || '').trim().slice(0, 200);
   const time = (b.time || '').trim();
   const notes = (b.notes || '').trim().slice(0, 300);
   const poster = normalizeWebsiteDemo(b.poster);
   const date = (b.date || '').trim().slice(0, 10);
+  const price = (b.price || '').trim().slice(0, 20);
+  const age = (b.age || '').trim().slice(0, 10);
   if (!movie) throw new Error('El título de la película es obligatorio');
   if (poster === null) throw new Error('URL de póster inválida');
+  if (price && !PRICE_ORDER.includes(price)) throw new Error('Precio inválido');
+  if (age && !AGE_LABELS[age]) throw new Error('Edad inválida');
   let day, dateOut = '';
   if (date) {
     day = isoWeekday(date);
@@ -148,13 +180,17 @@ function demoScreening(b) {
     if (!Number.isInteger(day) || day < 0 || day > 6) throw new Error('Día inválido');
   }
   if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) throw new Error('Hora inválida (formato HH:MM)');
-  return { id: crypto.randomUUID(), movie, day, date: dateOut, time, notes, poster };
+  return { id: crypto.randomUUID(), movie, day, date: dateOut, time, notes, poster, price, age };
 }
 
 async function demoApi(path, options = {}) {
   const method = options.method || 'GET';
   const body = options.body ? JSON.parse(options.body) : {};
   const db = demoDb.load();
+  for (const c of db.cinemas) {
+    c.stats = c.stats || {};
+    c.screenings = c.screenings || [];
+  }
   const token = ((options.headers || {}).Authorization || '').replace('Bearer ', '');
   const publicC = c => { const { ownerToken, ...rest } = c; return rest; };
   const m = path.match(/^api\/cinemas(?:\/([^/]+))?(?:\/(.*))?$/);
@@ -183,7 +219,10 @@ async function demoApi(path, options = {}) {
       id: crypto.randomUUID(), ownerToken: crypto.randomUUID(), name,
       address: (body.address || '').trim().slice(0, 200),
       description: (body.description || '').trim().slice(0, 1000),
-      website, poster, lat, lng, screenings: [], createdAt: new Date().toISOString()
+      website, poster,
+      phone: normalizePhoneDemo(body.phone),
+      whatsapp: normalizePhoneDemo(body.whatsapp),
+      lat, lng, screenings: [], stats: {}, createdAt: new Date().toISOString()
     };
     db.cinemas.push(created);
     demoDb.save(db);
@@ -209,6 +248,8 @@ async function demoApi(path, options = {}) {
       if (poster === null) throw new Error('URL de imagen inválida');
       cinema.poster = poster;
     }
+    if (body.phone !== undefined) cinema.phone = normalizePhoneDemo(body.phone);
+    if (body.whatsapp !== undefined) cinema.whatsapp = normalizePhoneDemo(body.whatsapp);
     if (body.lat !== undefined || body.lng !== undefined) {
       const lat = Number(body.lat), lng = Number(body.lng);
       if (!Number.isFinite(lat) || !Number.isFinite(lng)) throw new Error('Ubicación inválida');
@@ -221,6 +262,16 @@ async function demoApi(path, options = {}) {
   if (method === 'DELETE' && id && !rest) {
     needOwner();
     db.cinemas = db.cinemas.filter(c => c.id !== id);
+    demoDb.save(db);
+    return { ok: true };
+  }
+
+  if (method === 'POST' && rest === 'track') {
+    if (!cinema) throw new Error('Cine no encontrado');
+    if (!['view', 'website', 'phone', 'whatsapp', 'directions'].includes(body.type)) {
+      throw new Error('Tipo de evento inválido');
+    }
+    cinema.stats[body.type] = (cinema.stats[body.type] || 0) + 1;
     demoDb.save(db);
     return { ok: true };
   }
@@ -254,6 +305,7 @@ async function demoApi(path, options = {}) {
     const upd = demoScreening(body);
     s.movie = upd.movie; s.day = upd.day; s.date = upd.date;
     s.time = upd.time; s.notes = upd.notes; s.poster = upd.poster;
+    s.price = upd.price; s.age = upd.age;
     demoDb.save(db);
     return s;
   }
@@ -315,12 +367,21 @@ function nextScreening(cinema) {
 
 // ---------- map ----------
 const WORLD_BOUNDS = [[-85, -180], [85, 180]];
-const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+// Basemap oscuro de CARTO: requiere key gratuita (https://carto.com/basemaps/apikey —
+// llega por email, sin cuenta). Se pega acá o en el navegador con
+// localStorage.setItem('cinemita_carto_key', '...'). Sin key → OpenStreetMap estándar.
+const CARTO_KEY = localStorage.getItem('cinemita_carto_key') || '';
+const TILE_URL = CARTO_KEY
+  ? `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${CARTO_KEY}`
+  : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const TILE_ATTR = CARTO_KEY
+  ? '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+  : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 const TILE_OPTS = {
   maxZoom: 19,
   noWrap: true,
   bounds: [[-90, -180], [90, 180]],
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  attribution: TILE_ATTR
 };
 const MAP_OPTS = {
   minZoom: 3,
@@ -331,13 +392,22 @@ const MAP_OPTS = {
 const pinIcon = L.divIcon({
   className: 'pin',
   html: '<div class="pin-dot"></div>',
+  iconSize: [28, 28],
+  iconAnchor: [14, 34],
+  popupAnchor: [0, -28]
+});
+
+const meIcon = L.divIcon({
+  className: 'me-pin',
+  html: '<div class="me-dot"></div>',
   iconSize: [16, 16],
-  iconAnchor: [8, 8],
-  popupAnchor: [0, -12]
+  iconAnchor: [8, 8]
 });
 
 const map = L.map('map', MAP_OPTS).setView(BA_CENTER, 12);
 L.tileLayer(TILE_URL, TILE_OPTS).addTo(map);
+// Con tiles OSM (sin key de CARTO), un filtro suave los muta para la UI oscura.
+if (!CARTO_KEY) map.getContainer().classList.add('osm-fallback');
 
 function popupHtml(c) {
   const today = todayIso();
@@ -380,9 +450,38 @@ function matchesQuery(c) {
   return hay.includes(state.query);
 }
 
+// Filtros a nivel función: precio máximo ("hasta $") y franja horaria.
+function screeningMatches(s) {
+  const f = state.filters;
+  if (f.price) {
+    const idx = PRICE_ORDER.indexOf(s.price);
+    if (idx === -1 || idx > PRICE_ORDER.indexOf(f.price)) return false;
+  }
+  if (f.time) {
+    const slot = TIME_SLOTS.find(t => t.id === f.time);
+    const h = Number(s.time.slice(0, 2));
+    if (slot && (h < slot.from || h >= slot.to)) return false;
+  }
+  return true;
+}
+
+function cinemaMatches(c) {
+  if (!matchesQuery(c)) return false;
+  const f = state.filters;
+  if (f.radius && state.userPos &&
+      haversineKm(state.userPos.lat, state.userPos.lng, c.lat, c.lng) > f.radius) return false;
+  if (f.price || f.time) return c.screenings.some(screeningMatches);
+  return true;
+}
+
+function hasFilters() {
+  const f = state.filters;
+  return !!(f.price || f.time || (f.radius && state.userPos));
+}
+
 function renderList() {
   const list = document.getElementById('cinemaList');
-  let cinemas = state.cinemas.filter(matchesQuery);
+  let cinemas = state.cinemas.filter(cinemaMatches);
   // "Funciones hoy" = la próxima función del cine es hoy (no empezó todavía)
   if (state.onlyToday) cinemas = cinemas.filter(c => nextScreening(c)?.delta === 0);
 
@@ -395,7 +494,7 @@ function renderList() {
   }
 
   const title = document.getElementById('sidebarTitle');
-  if (state.query || state.onlyToday) {
+  if (state.query || state.onlyToday || hasFilters()) {
     title.textContent = `${cinemas.length} resultado${cinemas.length === 1 ? '' : 's'}`;
   } else {
     title.textContent = state.userPos ? 'Cines ordenados por distancia' : 'Todos los cines';
@@ -451,8 +550,9 @@ function renderCartelera() {
 
   const items = [];
   for (const c of state.cinemas) {
-    if (!matchesQuery(c)) continue;
+    if (!cinemaMatches(c)) continue;
     for (const s of c.screenings) {
+      if (!screeningMatches(s)) continue;
       if (s.date ? s.date === targetIso : s.day === d) items.push({ c, s });
     }
   }
@@ -476,8 +576,8 @@ function renderCartelera() {
         ${img ? `<img class="cart-poster" src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()" />` : ''}
         <span class="cart-time">${esc(s.time)}</span>
         <div>
-          <span class="cart-movie">${esc(s.movie)}${s.date ? ` <span class="cart-date">· ${fmtDate(s.date)}</span>` : ''}</span>
-          <span class="cart-cinema">${esc(c.name)}${s.notes ? ` · ${esc(s.notes)}` : ''}</span>
+          <span class="cart-movie">${esc(s.movie)}${s.date ? ` <span class="cart-date">· ${fmtDate(s.date)}</span>` : ''}${s.age ? ` <span class="tag tag-age">${AGE_LABELS[s.age]}</span>` : ''}</span>
+          <span class="cart-cinema">${esc(c.name)}${s.notes ? ` · ${esc(s.notes)}` : ''}${s.price ? ` · ${PRICE_LABELS[s.price]}` : ''}</span>
         </div>
       </div>`;
   }).join('');
@@ -521,6 +621,35 @@ document.getElementById('todayChip').addEventListener('click', () => {
   renderList();
 });
 
+// ---------- filtros ----------
+{
+  const priceSel = document.getElementById('fPrice');
+  for (const p of PRICE_ORDER) {
+    const label = p === 'gratis' ? 'Gratis' : `Hasta ${PRICE_LABELS[p]}`;
+    priceSel.insertAdjacentHTML('beforeend', `<option value="${p}">${label}</option>`);
+  }
+  const timeSel = document.getElementById('fTime');
+  for (const t of TIME_SLOTS) {
+    timeSel.insertAdjacentHTML('beforeend', `<option value="${t.id}">${t.label}</option>`);
+  }
+
+  priceSel.addEventListener('change', () => { state.filters.price = priceSel.value; renderSidebar(); });
+  timeSel.addEventListener('change', () => { state.filters.time = timeSel.value; renderSidebar(); });
+
+  const radiusSel = document.getElementById('fRadius');
+  radiusSel.addEventListener('change', () => {
+    const km = Number(radiusSel.value);
+    if (km && !state.userPos) {
+      // El filtro de distancia necesita la ubicación: pedirla primero.
+      requestLocation(() => { state.filters.radius = km; },
+        () => { radiusSel.value = '0'; state.filters.radius = 0; });
+      return;
+    }
+    state.filters.radius = km;
+    renderSidebar();
+  });
+}
+
 {
   const dayChipsEl = document.getElementById('dayChips');
   const today = jsDayToOurs(new Date().getDay());
@@ -551,17 +680,25 @@ window.openDetail = function (id) {
       const poster = s.poster
         ? `<img class="sched-poster" src="${esc(s.poster)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()" />`
         : '';
+      const badges =
+        (s.price ? `<span class="tag">${PRICE_LABELS[s.price]}</span>` : '') +
+        (s.age ? `<span class="tag tag-age">${AGE_LABELS[s.age]}</span>` : '');
       rows += `<tr><td>${screeningLabel(s)}</td><td>${esc(s.time)} — ${poster}<strong>${esc(s.movie)}</strong>` +
-        `${s.notes ? ` <span class="notes">(${esc(s.notes)})</span>` : ''}</td></tr>`;
+        `${s.notes ? ` <span class="notes">(${esc(s.notes)})</span>` : ''}${badges}</td></tr>`;
     }
   }
   const schedule = rows
     ? `<table class="schedule-table">${rows}</table>`
     : '<p class="hint">Todavía no hay funciones cargadas.</p>';
 
-  const website = c.website
-    ? `<a class="website-link" href="${esc(c.website)}" target="_blank" rel="noopener">${esc(c.website)}</a>`
-    : '';
+  // Botones de acción: cada clic cuenta como señal de intención para el dueño.
+  const waNum = (c.whatsapp || '').replace(/^\+/, '');
+  const actions = [
+    c.website ? `<a class="btn ghost small" href="${esc(c.website)}" target="_blank" rel="noopener" data-track="website">🌐 Sitio web</a>` : '',
+    c.phone ? `<a class="btn ghost small" href="tel:${esc(c.phone)}" data-track="phone">📞 ${esc(c.phone)}</a>` : '',
+    c.whatsapp ? `<a class="btn ghost small" href="https://wa.me/${esc(waNum)}" target="_blank" rel="noopener" data-track="whatsapp">💬 WhatsApp</a>` : '',
+    `<a class="btn ghost small" href="https://www.google.com/maps/dir/?api=1&destination=${c.lat},${c.lng}" target="_blank" rel="noopener" data-track="directions">🧭 Cómo llegar</a>`
+  ].join('');
 
   let manage = '';
   if (ownerToken(c.id)) {
@@ -580,17 +717,33 @@ window.openDetail = function (id) {
       }).join('');
 
     const adminUrl = `${location.href.split('#')[0]}#admin=${c.id}:${ownerToken(c.id)}`;
+    const st = c.stats || {};
+
+    const priceNames = { gratis: 'Gratis', bajo: '$ económico', medio: '$$ moderado', alto: '$$$ caro' };
+    const priceOpts = '<option value="">Precio — opcional</option>' +
+      PRICE_ORDER.map(p => `<option value="${p}">${priceNames[p]}</option>`).join('');
+    const ageOpts = '<option value="">Edad — opcional</option>' +
+      Object.entries(AGE_LABELS).map(([k, l]) => `<option value="${k}">${l}</option>`).join('');
 
     manage = `
       <div class="manage-section">
         <h3>Administrar (sos el dueño de este cine)</h3>
+        <div class="stats-block">
+          <p class="hint"><strong>Estadísticas</strong> — vistas del perfil: <b>${st.view || 0}</b> ·
+            clics: sitio web ${st.website || 0} · cómo llegar ${st.directions || 0} ·
+            teléfono ${st.phone || 0} · whatsapp ${st.whatsapp || 0}</p>
+        </div>
         <div class="manage-grid">
-          <input id="newMovie" placeholder="Película" maxlength="200" />
-          <select id="newDay">${DAYS.map((d, i) => `<option value="${i}">${d}</option>`).join('')}</select>
-          <input id="newTime" type="time" />
+          <input id="newMovie" placeholder="Película o evento" maxlength="200" />
+          <select id="newDay" title="Día de la semana">${DAYS.map((d, i) => `<option value="${i}">${d}</option>`).join('')}</select>
+          <input id="newTime" type="time" title="Horario" />
           <input id="newDate" type="date" title="Fecha puntual (función única)" />
         </div>
         <p class="hint">Sin fecha = función semanal. Con fecha = función única (estreno, evento…).</p>
+        <div class="manage-grid-2">
+          <select id="newPrice" title="Precio">${priceOpts}</select>
+          <select id="newAge" title="Restricción de edad">${ageOpts}</select>
+        </div>
         <div class="manage-grid-2">
           <input id="newNotes" placeholder="Notas (sala, precio, formato…) — opcional" maxlength="300" />
           <input id="newPoster" placeholder="Póster (URL) — opcional" maxlength="500" />
@@ -603,8 +756,10 @@ window.openDetail = function (id) {
         <div style="margin-top:12px">${screeningRows || '<p class="hint">Sin funciones todavía.</p>'}</div>
         <div class="csv-import">
           <p class="hint">Importar funciones desde CSV: columnas <code>dia,pelicula,hora,notas</code>
-            (día: nombre o 1–7, Lunes=1; hora HH:MM; notas, <code>fecha</code> —AAAA-MM-DD o DD/MM/AAAA, función única—
-            y <code>poster</code> —URL— son opcionales). Se aceptan <code>,</code> o <code>;</code> como separador.
+            (día: nombre o 1–7, Lunes=1; hora HH:MM). Opcionales: <code>fecha</code> (AAAA-MM-DD o
+            DD/MM/AAAA, función única), <code>poster</code> (URL), <code>precio</code>
+            (gratis, $, $$, $$$) y <code>edad</code> (atp, 13, 16, 18).
+            Se aceptan <code>,</code> o <code>;</code> como separador.
             <a href="ejemplo-funciones.csv" download>Descargar ejemplo</a></p>
           <input type="file" id="csvFile" accept=".csv,text/csv" />
           <button id="importCsvBtn" class="btn ghost small">Importar CSV</button>
@@ -629,7 +784,7 @@ window.openDetail = function (id) {
     <h2>${esc(c.name)}</h2>
     <p class="detail-addr">${esc(c.address || '')}</p>
     ${c.description ? `<p class="desc">${esc(c.description)}</p>` : ''}
-    ${website}
+    <div class="detail-actions">${actions}</div>
     <div class="detail-actions">
       <button id="shareBtn" class="btn ghost small">🔗 Copiar enlace</button>
     </div>
@@ -638,6 +793,14 @@ window.openDetail = function (id) {
     ${manage}`;
 
   document.getElementById('detailModal').classList.remove('hidden');
+
+  // Métricas del dueño: cuenta la vista y los clics de intención (no del propio dueño).
+  if (!ownerToken(c.id)) {
+    track(c.id, 'view');
+    for (const a of document.querySelectorAll('#detailBody [data-track]')) {
+      a.addEventListener('click', () => track(c.id, a.dataset.track));
+    }
+  }
 
   document.getElementById('shareBtn').addEventListener('click', e => {
     copyText(cinemaUrl(c.id), e.target);
@@ -662,6 +825,8 @@ window.openDetail = function (id) {
         document.getElementById('newDay').disabled = !!s.date;
         document.getElementById('newTime').value = s.time;
         document.getElementById('newDate').value = s.date || '';
+        document.getElementById('newPrice').value = s.price || '';
+        document.getElementById('newAge').value = s.age || '';
         document.getElementById('newNotes').value = s.notes;
         document.getElementById('newPoster').value = s.poster || '';
         document.getElementById('addScreeningBtn').textContent = 'Guardar función';
@@ -724,6 +889,8 @@ function resetScreeningForm() {
   document.getElementById('newDay').disabled = false;
   document.getElementById('newTime').value = '';
   document.getElementById('newDate').value = '';
+  document.getElementById('newPrice').value = '';
+  document.getElementById('newAge').value = '';
   document.getElementById('newNotes').value = '';
   document.getElementById('newPoster').value = '';
   document.getElementById('addScreeningBtn').textContent = 'Agregar función';
@@ -735,6 +902,8 @@ async function addScreening(cinemaId) {
   const day = document.getElementById('newDay').value;
   const time = document.getElementById('newTime').value;
   const date = document.getElementById('newDate').value;
+  const price = document.getElementById('newPrice').value;
+  const age = document.getElementById('newAge').value;
   const notes = document.getElementById('newNotes').value.trim();
   const poster = document.getElementById('newPoster').value.trim();
   const editing = state.editingScreeningId;
@@ -742,7 +911,7 @@ async function addScreening(cinemaId) {
     await api(editing ? `api/cinemas/${cinemaId}/screenings/${editing}` : `api/cinemas/${cinemaId}/screenings`, {
       method: editing ? 'PUT' : 'POST',
       headers: authHeaders(cinemaId),
-      body: JSON.stringify({ movie, day: Number(day), date, time, notes, poster })
+      body: JSON.stringify({ movie, day: Number(day), date, time, notes, poster, price, age })
     });
     state.editingScreeningId = null;
     await reload();
@@ -766,6 +935,20 @@ function dayFromToken(token) {
   const n = Number(t);
   if (Number.isInteger(n) && n >= 1 && n <= 7) return n - 1;
   return null;
+}
+
+// Devuelven '' si la celda está vacía (usa el valor por defecto) o null si es inválida.
+function priceFromToken(t) {
+  const k = stripAccents((t || '').trim().toLowerCase());
+  if (!k) return '';
+  const map = { gratis: 'gratis', '$': 'bajo', '$$': 'medio', '$$$': 'alto',
+    bajo: 'bajo', economico: 'bajo', medio: 'medio', moderado: 'medio', alto: 'alto', caro: 'alto' };
+  return map[k] ?? null;
+}
+function ageFromToken(t) {
+  const k = stripAccents((t || '').trim().toLowerCase().replace(/^\+/, ''));
+  if (!k) return '';
+  return AGE_LABELS[k] ? k : null;
 }
 
 // Acepta AAAA-MM-DD o DD/MM/AAAA; devuelve ISO o null.
@@ -812,6 +995,8 @@ function parseCsv(text) {
   col.notes = header.indexOf('notas');
   col.date = header.indexOf('fecha');
   col.poster = header.indexOf('poster');
+  col.price = header.indexOf('precio');
+  col.age = header.indexOf('edad');
   if (col.day === -1 || col.movie === -1 || col.time === -1) {
     return { error: 'Encabezado inválido. Se espera: dia,pelicula,hora,notas' };
   }
@@ -840,7 +1025,11 @@ function parseCsv(text) {
     if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) {
       return { error: `Fila ${i + 1}: hora inválida ("${time}", usar HH:MM)` };
     }
-    screenings.push({ day, date, movie, time, notes, poster });
+    const price = col.price === -1 ? '' : priceFromToken(r[col.price]);
+    if (price === null) return { error: `Fila ${i + 1}: precio inválido ("${(r[col.price] || '').trim()}")` };
+    const age = col.age === -1 ? '' : ageFromToken(r[col.age]);
+    if (age === null) return { error: `Fila ${i + 1}: edad inválida ("${(r[col.age] || '').trim()}")` };
+    screenings.push({ day, date, movie, time, notes, poster, price, age });
   }
   if (!screenings.length) return { error: 'El archivo no tiene funciones' };
   return { screenings };
@@ -885,6 +1074,8 @@ function openRegister(cinema = null) {
     registerForm.name.value = cinema.name;
     registerForm.address.value = cinema.address;
     registerForm.description.value = cinema.description;
+    registerForm.phone.value = cinema.phone || '';
+    registerForm.whatsapp.value = cinema.whatsapp || '';
     registerForm.website.value = cinema.website;
     registerForm.poster.value = cinema.poster || '';
   }
@@ -893,6 +1084,7 @@ function openRegister(cinema = null) {
   if (!state.pickMap) {
     state.pickMap = L.map('pickMap', MAP_OPTS).setView(BA_CENTER, 12);
     L.tileLayer(TILE_URL, TILE_OPTS).addTo(state.pickMap);
+    if (!CARTO_KEY) state.pickMap.getContainer().classList.add('osm-fallback');
     state.pickMap.on('click', e => setPicked(e.latlng));
   }
   if (cinema) setPicked({ lat: cinema.lat, lng: cinema.lng });
@@ -961,6 +1153,8 @@ registerForm.addEventListener('submit', async e => {
     name: registerForm.name.value,
     address: registerForm.address.value,
     description: registerForm.description.value,
+    phone: registerForm.phone.value,
+    whatsapp: registerForm.whatsapp.value,
     website: registerForm.website.value,
     poster: registerForm.poster.value,
     lat: state.pickedLatLng.lat,
@@ -996,22 +1190,26 @@ registerForm.addEventListener('submit', async e => {
 
 // ---------- geolocation ----------
 let userMarker = null;
-document.getElementById('locateBtn').addEventListener('click', () => {
+function requestLocation(onDone, onFail) {
   if (!navigator.geolocation) {
     alert('Tu navegador no soporta geolocalización.');
+    onFail?.();
     return;
   }
   navigator.geolocation.getCurrentPosition(pos => {
     state.userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
     if (userMarker) userMarker.setLatLng(state.userPos);
     else {
-      userMarker = L.circleMarker(state.userPos, {
-        radius: 8, color: '#fff', weight: 2, fillColor: '#1971c2', fillOpacity: 1
-      }).addTo(map).bindPopup('Estás acá');
+      userMarker = L.marker(state.userPos, { icon: meIcon })
+        .addTo(map).bindPopup('Estás acá');
     }
-    map.flyTo(state.userPos, 13, { duration: 0.8 });
+    onDone?.();
     renderSidebar();
-  }, () => alert('No se pudo obtener tu ubicación.'));
+  }, () => { alert('No se pudo obtener tu ubicación.'); onFail?.(); });
+}
+
+document.getElementById('locateBtn').addEventListener('click', () => {
+  requestLocation(() => map.flyTo(state.userPos, 13, { duration: 0.8 }));
 });
 
 // ---------- misc ----------

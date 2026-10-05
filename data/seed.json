@@ -1,8 +1,8 @@
 {
   "cinemas": [
     {
-      "id": "eff70285-9ef4-42f2-9cfb-02c065ff53f8",
-      "ownerToken": "d2c8e80b-32cf-4487-9545-9ad77704f761",
+      "id": "2170cda8-bd69-4031-bf16-48c38f3b6dff",
+      "ownerToken": "04c4f4d5-26c9-4666-b633-aecefa09e7da",
       "name": "Cine Gaumont (Espacio INCAA)",
       "address": "Av. Rivadavia 1635, Congreso",
       "description": "Sala del INCAA dedicada a cine argentino e independiente.",
@@ -12,39 +12,55 @@
       "lng": -58.3917,
       "screenings": [
         {
-          "id": "ea1cae77-b559-4dc5-be5b-197a666246f2",
+          "id": "849ff5e0-3556-4d86-be23-bcc01a20478c",
           "movie": "Relatos salvajes",
           "day": 4,
           "time": "21:00",
-          "notes": "Ciclo cine argentino"
+          "notes": "Ciclo cine argentino",
+          "price": "bajo",
+          "age": "16"
         },
         {
-          "id": "e50bf796-c0cc-4aa4-b78b-b3e05c7db33a",
+          "id": "7f111f76-586a-4d8b-a4f7-b15eec41d412",
           "movie": "Nueve reinas",
           "day": 5,
           "time": "19:30",
-          "notes": ""
+          "notes": "",
+          "price": "bajo",
+          "age": "13"
         },
         {
-          "id": "1c69ea39-4755-4a8a-a829-30ddbfcb8623",
+          "id": "31977c24-9b1c-4a35-bade-c1ff707b4584",
           "movie": "La ciénaga",
           "day": 6,
-          "time": "18:00",
-          "notes": "Copia restaurada"
+          "time": "15:00",
+          "notes": "Matineé — copia restaurada",
+          "price": "gratis",
+          "age": "13"
         },
         {
-          "id": "ac7bc461-bf8a-4d6e-b3cb-d5e16804017d",
+          "id": "a8a1c80b-eb78-48be-b88e-7b59f483a612",
           "movie": "El ciudadano ilustre",
           "day": 0,
           "time": "20:30",
-          "notes": ""
+          "notes": "",
+          "price": "bajo"
+        },
+        {
+          "id": "23d50f11-0c65-4fc0-94f4-c74b3ed752aa",
+          "movie": "Medianoche en París",
+          "day": 5,
+          "time": "00:15",
+          "notes": "Función de trasnoche",
+          "price": "medio",
+          "age": "atp"
         }
       ],
-      "createdAt": "2026-09-30T00:55:18.557Z"
+      "createdAt": "2026-10-05T22:58:28.430Z"
     },
     {
-      "id": "5530b0bc-0d6c-4353-a53a-6759d787af38",
-      "ownerToken": "977cb7a6-651e-4202-8287-304aac9a158d",
+      "id": "bdb82bbf-a229-4ad0-a7f1-c26ea72f69f1",
+      "ownerToken": "bad634c1-f689-4539-899d-bce25c7479a4",
       "name": "Cine Cosmos UBA",
       "address": "Av. Corrientes 2046, Centro",
       "description": "Cine club universitario, programación de culto y de autor.",
@@ -54,32 +70,55 @@
       "lng": -58.3968,
       "screenings": [
         {
-          "id": "ca2823e7-8482-49dd-8883-b855cd0e2a56",
+          "id": "752c4bff-e199-4c3a-a774-86aef58eb86f",
           "movie": "Zama",
           "day": 2,
           "time": "20:00",
-          "notes": "Debate posterior"
+          "notes": "Debate posterior",
+          "price": "gratis"
         },
         {
-          "id": "09a96735-ceef-445e-a257-0be3fdbf1274",
+          "id": "0ee8eb92-d53f-47c2-9d74-8ffde961c2e1",
           "movie": "Cléo de 5 a 7",
           "day": 4,
           "time": "19:00",
-          "notes": "Ciclo Agnès Varda"
+          "notes": "Ciclo Agnès Varda",
+          "price": "gratis",
+          "age": "16"
         },
         {
-          "id": "fafc224c-0bf9-4386-93ea-dcc0278ca968",
+          "id": "49d495ee-911d-4db8-9858-f2695e8d036a",
           "movie": "Historia mínima",
           "day": 6,
           "time": "17:30",
-          "notes": ""
+          "notes": "",
+          "price": "gratis",
+          "age": "atp"
+        },
+        {
+          "id": "13b86809-ae3d-4040-b7a3-f244300af033",
+          "movie": "Donnie Darko",
+          "day": 4,
+          "time": "23:59",
+          "notes": "Función de culto",
+          "price": "bajo",
+          "age": "16"
+        },
+        {
+          "id": "0a4dc427-3322-4447-8c2b-a2ffe0c64190",
+          "movie": "Mi vecino Totoro",
+          "day": 6,
+          "time": "10:30",
+          "notes": "Matineé familiar",
+          "price": "gratis",
+          "age": "atp"
         }
       ],
-      "createdAt": "2026-09-30T00:55:18.558Z"
+      "createdAt": "2026-10-05T22:58:28.432Z"
     },
     {
-      "id": "b8218da3-6759-49db-bd1d-39eb96919dcd",
-      "ownerToken": "d5745bdb-3aed-40c3-96eb-48d15ee770f4",
+      "id": "d540a62f-3f02-452a-b1c3-e0a6c8967bfe",
+      "ownerToken": "74443d40-5438-484d-883d-12723dd83a42",
       "name": "MALBA Cine",
       "address": "Av. Figueroa Alcorta 3415, Palermo",
       "description": "Cine del museo MALBA: estrenos de autor y ciclos temáticos.",
@@ -89,32 +128,47 @@
       "lng": -58.4137,
       "screenings": [
         {
-          "id": "87869f53-6ad5-4ad8-9f0e-349fa2a22441",
+          "id": "e581b9a2-0ba5-4dd6-9ef8-5f908eb76116",
           "movie": "El faro",
           "day": 3,
           "time": "21:30",
-          "notes": ""
+          "notes": "",
+          "price": "medio",
+          "age": "18"
         },
         {
-          "id": "a8395eaa-9e52-49d8-84ca-70085dd899d5",
+          "id": "612971f9-3373-4967-a06d-294d3fd9f612",
           "movie": "La odisea de los giles",
           "day": 5,
           "time": "20:00",
-          "notes": ""
+          "notes": "",
+          "price": "medio",
+          "age": "atp"
         },
         {
-          "id": "9d6fc18a-9f73-440d-b114-4e521cde6e34",
+          "id": "773ccecb-e497-452d-b194-1cb850731e93",
           "movie": "Retrato de una mujer en llamas",
           "day": 6,
           "time": "19:00",
-          "notes": "Subtitulada"
+          "notes": "Subtitulada",
+          "price": "medio",
+          "age": "13"
+        },
+        {
+          "id": "50754b29-f749-4060-9c43-40f64938a751",
+          "movie": "Avant premiere: cine de autor",
+          "day": 2,
+          "time": "21:00",
+          "notes": "Con directora invitada",
+          "price": "alto",
+          "age": "16"
         }
       ],
-      "createdAt": "2026-09-30T00:55:18.558Z"
+      "createdAt": "2026-10-05T22:58:28.432Z"
     },
     {
-      "id": "42d63ef8-31fd-4298-b49b-b5b0cc70eda2",
-      "ownerToken": "fb952d4a-fac9-417c-8983-3c74ba53a22f",
+      "id": "97a4f1cc-e826-4315-a8c6-1943abce1771",
+      "ownerToken": "f64fdfbb-dd87-4397-97cb-b99117148bbf",
       "name": "Cine Teatro 25 de Mayo",
       "address": "Av. Triunvirato 4439, Villa Urquiza",
       "description": "Sala barrial municipal con funciones de cine nacional.",
@@ -124,25 +178,45 @@
       "poster": "https://commons.wikimedia.org/wiki/Special:FilePath/Complejo_Cultural_Teatro_25_de_Mayo_Villa_Urquiza.jpg?width=800",
       "screenings": [
         {
-          "id": "3afcd971-bb40-46c7-bda6-db05e5582257",
+          "id": "8f57facb-ed54-4162-87ee-1fce5955ce55",
           "movie": "El secreto de sus ojos",
           "day": 5,
           "time": "21:00",
-          "notes": "Entrada gratuita"
+          "notes": "Entrada gratuita",
+          "price": "gratis",
+          "age": "13"
         },
         {
-          "id": "7b13f239-2f35-4a1c-ad57-2441cfdd1690",
+          "id": "49894fcd-f79c-4a93-8902-3f8048776f8c",
           "movie": "Un cuento chino",
           "day": 6,
           "time": "18:30",
-          "notes": "Función familiar"
+          "notes": "Función familiar",
+          "price": "gratis",
+          "age": "atp"
+        },
+        {
+          "id": "cc47971f-a959-425d-ad26-78d08f0ff0fc",
+          "movie": "Cine de barrio: matineé",
+          "day": 0,
+          "time": "11:00",
+          "notes": "Ciclo municipal",
+          "price": "gratis"
+        },
+        {
+          "id": "412bf812-6ca8-43a6-b8ec-2a1ebf19e465",
+          "movie": "La novia del desierto",
+          "day": 5,
+          "time": "19:00",
+          "notes": "Función doble",
+          "price": "bajo"
         }
       ],
-      "createdAt": "2026-09-30T00:55:18.558Z"
+      "createdAt": "2026-10-05T22:58:28.432Z"
     },
     {
-      "id": "063e6e63-097f-45ee-a26f-bf301128a18e",
-      "ownerToken": "01136503-b8ad-41d1-99bb-76cd0a84f1ec",
+      "id": "f7a323cf-974f-4465-884f-b5c0ba0164ac",
+      "ownerToken": "f7d3a1f5-65da-4b4b-bdce-4a35e7a8b15f",
       "name": "Alianza Francesa",
       "address": "Av. Córdoba 946, Centro",
       "description": "Sala de la Alianza Francesa: cine francófono y europeo.",
@@ -152,32 +226,45 @@
       "lng": -58.3807,
       "screenings": [
         {
-          "id": "57f1fa3d-6ea2-4ae6-8fb9-ba2216e17e6f",
+          "id": "127391c0-8ecc-400c-8df0-d5b5e723a93f",
           "movie": "Amélie",
           "day": 1,
           "time": "19:00",
-          "notes": "VOSE"
+          "notes": "VOSE",
+          "price": "bajo",
+          "age": "atp"
         },
         {
-          "id": "6f95d22d-2f73-438e-b7a5-6517c0af0a83",
+          "id": "8106a543-55f7-41d9-b1ca-abec1ed4122f",
           "movie": "La clase",
           "day": 3,
           "time": "20:30",
-          "notes": "Cine debate"
+          "notes": "Cine debate",
+          "price": "bajo"
         },
         {
-          "id": "f29b0ed0-7134-4453-975f-56413b40a660",
+          "id": "25073d57-fed5-4d28-aa06-c8f4a9237c63",
           "movie": "El niño de la bicicleta",
           "day": 6,
           "time": "17:00",
-          "notes": "Dardenne"
+          "notes": "Dardenne",
+          "price": "bajo"
+        },
+        {
+          "id": "326e732d-8613-4607-b7ca-74cbe114d84e",
+          "movie": "Cuentos de la medianoche",
+          "day": 5,
+          "time": "23:30",
+          "notes": "Hors normes",
+          "price": "medio",
+          "age": "18"
         }
       ],
-      "createdAt": "2026-09-30T00:55:18.558Z"
+      "createdAt": "2026-10-05T22:58:28.432Z"
     },
     {
-      "id": "2a76aa51-721b-4cf0-b426-2d7ae1fb55e5",
-      "ownerToken": "f8c02009-fd8b-440c-924c-56c06a527a34",
+      "id": "c2c8a07e-01b5-46ac-b775-bcb92620862f",
+      "ownerToken": "c4abf4f6-531a-400d-9f9f-437ba7820b94",
       "name": "Patio de los Lecheros",
       "address": "Donato Álvarez 175, Caballito",
       "description": "Espacio cultural barrial con proyecciones al aire libre.",
@@ -187,21 +274,42 @@
       "poster": "https://commons.wikimedia.org/wiki/Special:FilePath/Cine_al_Aire_Libre-_'The_Artist'.jpg?width=800",
       "screenings": [
         {
-          "id": "4eda10ed-a36e-44ee-8138-9fa683cfa810",
+          "id": "f8f99eda-ec6a-4fd6-958a-c2accee1c82b",
           "movie": "Esperando la carroza",
           "day": 4,
           "time": "21:00",
-          "notes": "A cielo abierto"
+          "notes": "A cielo abierto",
+          "price": "gratis",
+          "age": "atp"
         },
         {
-          "id": "38a2d981-acf9-4036-81af-a3f585c8562f",
+          "id": "eb6f3cc5-930a-4b3d-bcac-b428828b39d9",
           "movie": "El clan",
           "day": 5,
           "time": "21:00",
-          "notes": "A cielo abierto"
+          "notes": "A cielo abierto",
+          "price": "gratis",
+          "age": "16"
+        },
+        {
+          "id": "05e4e1c8-0838-49a1-b7db-48f1863cbc5c",
+          "movie": "Festival de jazz",
+          "day": 5,
+          "time": "22:30",
+          "notes": "Música en vivo",
+          "price": "bajo"
+        },
+        {
+          "id": "4eb50aff-2b3b-4b3e-8370-493d46c56258",
+          "movie": "Picnic + cortos al aire libre",
+          "day": 6,
+          "time": "12:30",
+          "notes": "Mediodía familiar",
+          "price": "gratis",
+          "age": "atp"
         }
       ],
-      "createdAt": "2026-09-30T00:55:18.558Z"
+      "createdAt": "2026-10-05T22:58:28.432Z"
     }
   ]
 }

@@ -62,6 +62,22 @@
         <div class="chips">
           <button id="todayChip" class="chip">Funciones hoy</button>
         </div>
+        <div class="filters">
+          <select id="fPrice" aria-label="Filtrar por precio">
+            <option value="">Cualquier precio</option>
+          </select>
+          <select id="fTime" aria-label="Filtrar por franja horaria">
+            <option value="">Cualquier horario</option>
+          </select>
+          <select id="fRadius" aria-label="Filtrar por distancia">
+            <option value="0">Cualquier distancia</option>
+            <option value="1">A 1 km</option>
+            <option value="2">A 2 km</option>
+            <option value="5">A 5 km</option>
+            <option value="10">A 10 km</option>
+            <option value="25">A 25 km</option>
+          </select>
+        </div>
       </div>
 
       <div id="carteleraControls" class="hidden">
@@ -75,6 +91,10 @@
         <div class="skeleton-card"></div>
       </div>
       <div id="carteleraList" class="cartelera-list hidden"></div>
+      <p class="legal-links">
+        <a href="terminos.html" target="_blank" rel="noopener">Términos y condiciones</a> ·
+        <a href="privacidad.html" target="_blank" rel="noopener">Política de privacidad</a>
+      </p>
     </aside>
     <div id="map"></div>
   </main>
@@ -101,6 +121,14 @@
         <label>Descripción
           <textarea name="description" maxlength="1000" rows="2" placeholder="Cine club barrial con programación de autor…"></textarea>
         </label>
+        <div class="form-row">
+          <label>Teléfono
+            <input type="tel" name="phone" maxlength="30" placeholder="+54 11 5555-1234" />
+          </label>
+          <label>WhatsApp
+            <input type="tel" name="whatsapp" maxlength="30" placeholder="+54 9 11 5555-1234" />
+          </label>
+        </div>
         <label>Sitio web
           <input type="text" name="website" maxlength="300" placeholder="micine.com.ar" />
         </label>

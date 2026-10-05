@@ -375,7 +375,7 @@ main { flex: 1; display: flex; min-height: 0; }
 /* detail = slide-over panel */
 #detailModal { justify-content: flex-end; align-items: stretch; padding: 14px; }
 #detailModal .modal-content {
-  width: min(470px, 94vw);
+  width: min(540px, 94vw);
   max-height: none;
   height: 100%;
   border-radius: 18px;
@@ -509,9 +509,10 @@ input[type="search"]::-webkit-search-cancel-button { filter: invert(0.6); cursor
   border-top: 1px dashed var(--border-strong);
 }
 .manage-section h3 { font-size: 0.95rem; margin-bottom: 10px; color: var(--accent); }
-.manage-grid { display: grid; grid-template-columns: 1fr 108px 92px 138px; gap: 8px; margin-bottom: 6px; }
+.manage-grid { display: grid; grid-template-columns: 1.1fr 0.9fr 1.3fr; gap: 8px; margin-bottom: 6px; }
+.manage-grid #newMovie { grid-column: 1 / -1; }
 .manage-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
-.manage-grid input, .manage-grid select, .manage-grid-2 input { min-width: 0; }
+.manage-grid input, .manage-grid select, .manage-grid-2 input, .manage-grid-2 select { min-width: 0; }
 select:disabled { opacity: 0.55; cursor: default; }
 .screening-form-actions { display: flex; gap: 8px; align-items: center; }
 
@@ -546,8 +547,9 @@ select:disabled { opacity: 0.55; cursor: default; }
 
 /* ---------- leaflet theming ---------- */
 .leaflet-container { background: #0e1013; font-family: inherit; }
-/* darken the free OSM tiles to match the dark UI (no paid tile service needed) */
-.leaflet-tile-pane {
+/* darken the free OSM tiles to match the dark UI (no paid tile service needed).
+   Solo sin key de CARTO: con key se usa Dark Matter y el filtro no aplica. */
+.osm-fallback .leaflet-tile-pane {
   filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.92) saturate(0.35);
 }
 .leaflet-bar a {
@@ -586,18 +588,151 @@ a.leaflet-popup-close-button:hover { color: var(--text); }
 .popup em { color: var(--accent-2); font-style: normal; font-size: 0.75rem; }
 .popup .schedule-table { font-size: 0.8rem; margin: 8px 0 2px; }
 
-/* custom dot marker */
+/* custom pin marker */
 .pin { background: none; border: none; }
+/* Pin tipo "gota": cuadrado con la esquina inferior-izquierda cuadrada +
+   rotación -45° = la punta queda abajo. El punto blanco queda centrado. */
 .pin-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent) 75%);
+  border: 3px solid #fff;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.55);
+  transition: transform 0.15s;
+  position: relative;
+}
+.pin-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  transform: translate(-50%, -50%);
+}
+.pin:hover .pin-dot { transform: rotate(-45deg) scale(1.12); }
+
+/* Marcador "estás acá": punto azul con halo pulsante. */
+.me-dot {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, var(--accent-2), var(--accent) 70%);
-  border: 2px solid #fff;
-  box-shadow: 0 0 0 4px rgba(255, 92, 46, 0.22), 0 3px 10px rgba(0, 0, 0, 0.6);
-  transition: transform 0.15s;
+  background: #4dabf7;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  position: relative;
 }
-.pin:hover .pin-dot { transform: scale(1.25); }
+.me-dot::before {
+  content: '';
+  position: absolute;
+  inset: -11px;
+  border-radius: 50%;
+  border: 2px solid rgba(77, 171, 247, 0.55);
+  animation: mePulse 2.2s ease-out infinite;
+}
+@keyframes mePulse {
+  0% { transform: scale(0.55); opacity: 0.9; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* ---------- filtros ---------- */
+.filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.filters select {
+  flex: 1 1 44%;
+  min-width: 0;
+  width: auto;
+  margin-top: 0;
+  padding: 7px 9px;
+  font-size: 0.78rem;
+  border-radius: 9px;
+}
+
+/* ---------- tags / badges ---------- */
+.tag {
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--panel-3);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  vertical-align: middle;
+  margin-left: 5px;
+}
+.tag-age { color: var(--accent-2); border-color: rgba(255, 179, 122, 0.35); }
+h2 .tag { font-size: 0.62rem; }
+
+/* ---------- stats del dueño ---------- */
+.stats-block {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-2);
+  padding: 10px 12px;
+  margin-bottom: 14px;
+}
+.stats-block .hint { margin-bottom: 0; }
+.stats-block b { color: var(--text); }
+
+/* ---------- enlaces legales ---------- */
+.legal-links {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  text-align: center;
+  color: var(--muted);
+}
+.legal-links a { color: var(--muted); text-decoration: none; }
+.legal-links a:hover { color: var(--text); text-decoration: underline; }
+
+/* ---------- form rows ---------- */
+.form-row { display: flex; gap: 10px; }
+.form-row label { flex: 1; min-width: 0; }
+
+/* ---------- páginas legales ---------- */
+/* body es flex/height:100% para el layout mapa+sidebar; en las páginas legales
+   vuelve a flujo de documento normal para que el contenido scrollee bien. */
+body.page-legal {
+  display: block;
+  height: auto;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+.legal {
+  display: block;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 44px 24px 90px;
+  line-height: 1.7;
+  overflow-wrap: break-word;
+}
+.legal h1 {
+  font-family: "Bebas Neue", "Inter", sans-serif;
+  font-size: 2.4rem;
+  font-weight: 400;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 6px;
+}
+.legal .updated { color: var(--muted); font-size: 0.8rem; margin-bottom: 30px; }
+.legal h2 { font-size: 1.02rem; margin: 28px 0 8px; }
+.legal p, .legal li { color: var(--muted); font-size: 0.92rem; margin-bottom: 10px; }
+.legal ul { padding-left: 22px; }
+.legal li { margin-bottom: 5px; }
+.legal a { color: var(--accent-2); }
+.legal .back { display: inline-block; margin-bottom: 26px; font-size: 0.85rem; text-decoration: none; }
 
 /* ---------- responsive ---------- */
 @media (max-width: 760px) {
