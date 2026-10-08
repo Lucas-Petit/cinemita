@@ -44,6 +44,14 @@ jobs:
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon
 
+      # Para que el login de Google funcione en el APK de debug hay que agregar
+      # este SHA-1 en Firebase Console → app Android → huellas SHA. (La clave de
+      # debug de CI cambia en cada build; para la release usá tu keystore fijo.)
+      - name: Print APK signing SHA-1 (add it in Firebase console)
+        run: |
+          APKSIGNER=$(find $ANDROID_HOME/build-tools -name apksigner | sort -V | tail -1)
+          $APKSIGNER verify --print-certs android/app/build/outputs/apk/debug/app-debug.apk
+
       - uses: actions/upload-artifact@v4
         with:
           name: cinemita-debug-apk
