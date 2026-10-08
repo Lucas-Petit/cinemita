@@ -16,9 +16,11 @@
 import { createRequire } from 'module';
 import { readFileSync } from 'fs';
 import { randomUUID } from 'crypto';
+import { initializeApp, cert } from 'firebase-admin';
+import { getFirestore } from 'firebase-admin/firestore';
 
+// createRequire solo para seed.js, que es CommonJS.
 const require = createRequire(import.meta.url);
-const admin = require('firebase-admin');
 
 const args = process.argv.slice(2);
 const flag = (name, def = null) => {
@@ -47,8 +49,8 @@ if (useSeed) {
   cinemas = JSON.parse(readFileSync(file, 'utf8')).cinemas || [];
 }
 
-admin.initializeApp({ credential: admin.credential.cert(saPath) });
-const db = admin.firestore();
+initializeApp({ credential: cert(saPath) });
+const db = getFirestore();
 
 let n = 0;
 for (const c of cinemas) {
