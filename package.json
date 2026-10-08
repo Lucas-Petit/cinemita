@@ -4,11 +4,23 @@
   "description": "Mapa de cines independientes de Buenos Aires con funciones semanales",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "cap:sync": "cap sync android"
   },
   "license": "MIT",
   "dependencies": {
+    "@capacitor-firebase/authentication": "^8.5.2",
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/cli": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/geolocation": "^8.2.3",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4",
     "express": "^4.21.2",
     "leaflet": "^1.9.4"
+  },
+  "devDependencies": {
+    "firebase-admin": "^14.5.0"
   }
 }

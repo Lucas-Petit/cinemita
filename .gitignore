@@ -1,3 +1,7 @@
 node_modules/
 data/
 dist-static/
+android/app/google-services.json
+*.keystore
+*.jks
+serviceAccount*.json

@@ -1,0 +1,268 @@
+﻿1. Concepto General
+¿Qué es?
+Una aplicación con el objetivo de promover actividades y eventos de todo tipo.
+Nombre
+Palabras clave: Actividad, Plan, Salida, Programa, Evento.
+Criterios que debe cumplir:
+•        Abarcativo: que no se encasille en algo acotado.
+•        Worldwide: posibilidad de expansión internacional a futuro.
+•        Adaptable: posibilidad de variantes a partir del nombre principal (ej.: “Planit”, “Planit Dates”, “Planit Fútbol”).
+Opción principal: Planit.
+Problema que resuelve
+•        Usuario: la dificultad de encontrar un plan, actividad o evento al que asistir.
+•        Empresa: la dificultad de lograr la asistencia esperada.
+Necesidad que satisface
+•        Usuario: encontrar un plan o actividad adaptado a sus preferencias.
+•        Empresa: promover los planes y actividades que ofrece.
+•        Diferenciación: encontrar todo en un solo lugar, con muchas propuestas y fácil de encontrar.
+Público objetivo
+Definir una edad mínima (16 o 18 años) e indicar la restricción de edad en los eventos que lo requieran (por ejemplo, boliches: +18).
+Situación de uso
+Ante la incertidumbre de qué hacer ese día, el usuario abre la app y busca qué posibilidades existen cerca suyo o en la zona donde va a estar. Sirve tanto para hacer algo en solitario como acompañado.
+Frecuencia de uso esperada
+Diaria, con mayor uso los fines de semana.
+Qué hace diferente a la app
+La amplia cantidad de propuestas y la facilidad para encontrar el plan o actividad ideal para cada uno.
+Competidores y apps similares
+•        Competidores: Musiquita, Morfy.
+•        Apps similares: Musiquita.
+Qué queremos evitar
+Una interfaz complicada. Entrar y encontrar un plan tiene que ser lo más simple y lo menos frustrante posible.
+Modelo de negocio
+•        Suscripción por parte de las empresas.
+•        Publicidad por parte de las empresas.
+•        Plan premium para usuarios (a evaluar).
+2. Identidad Visual
+Colores
+•        Principal: a definir.
+•        Secundario: a definir.
+Logo
+A definir.
+Tipografía
+A definir.
+Estilo de ilustraciones
+A definir.
+Interfaz
+•        Mapa interactivo en el que aparezcan todas las empresas, cada una en su respectiva ubicación.
+•        Simple, moderna y fácil de navegar.
+3. Plataforma y Tecnología
+Privacidad y seguridad
+Mostrar perfiles de desconocidos implica riesgos de seguridad y privacidad. Opciones a evaluar:
+•        Asistencia privada o pública (en principio, privada).
+•        Posibilidad de bloquear y denunciar usuarios.
+•        No mostrar la ubicación exacta de ningún usuario.
+Se debe cumplir la Ley 25.326 de Protección de Datos Personales, por lo que vamos a necesitar términos y condiciones y una política de privacidad.
+Publicación en las tiendas
+•        Google Play: cuenta de desarrollador con un pago único de USD 25. La revisión suele ser rápida.
+•        App Store (Apple): USD 99 por año. La revisión es más estricta y puede tardar unos días. Para compilar la app para iPhone hace falta una Mac.
+•        Requisitos para publicar: nombre, íconos, capturas de pantalla, descripción, política de privacidad publicada en una web y, para las cuentas, datos legales (si se hace como empresa, conviene tener la sociedad o el monotributo en orden).
+Costos posteriores al lanzamiento
+•        Servidor/backend: donde viven los datos de usuarios, eventos y empresas. Servicios como Firebase o Supabase son gratis al principio y cobran a medida que se crece.
+•        Mapas: la API de Google Maps tiene una cuota gratuita, pero con mucho uso empieza a cobrar. Es un punto a presupuestar.
+•        Mantenimiento: Apple y Google actualizan sus sistemas todos los años, por lo que la app necesita actualizaciones periódicas aunque no se agregue nada nuevo.
+4. Estructura de la App
+Usuario
+Cinco pestañas:
+•        Inicio: recomendaciones según las preferencias del usuario y lo destacado del día.
+•        Mapa: mapa interactivo con filtros.
+•        Buscar: con o sin los filtros definidos.
+•        Mis planes: planes confirmados y favoritos.
+•        Perfil: datos y preferencias del usuario.
+Empresa
+Panel separado para cargar sucursales y eventos y ver estadísticas:
+•        Cantidad de personas que vieron el evento.
+•        Cantidad de confirmaciones de asistencia.
+* clicks en el perfil o evento
+* guardados en favoritos
+Conversion: (me eligen?)
+* tasa de confirmacion: de los que lo vieron que porcentaje confirmo asistencia
+* clicks en “como llegar”, telefono, whatsapp o reservas: son señales de intencion real de ir, y a las empresas les encantan porque las perciben como clientes concretos
+* Asistencia real vs confirmada: si en algun momento sumas un check-in en el lugar (con qr por ejemplo), podes mostrar cuantos de los que confirmaron fueron de verdad. Es la metrica mas valiosa de todas
+
+Perfil del Publico: Quien me elige?
+   * edad y genero aproximados
+   * desde donde vienen
+   * dias y horarios con mas busquedas
+   * usuarios nuevos vs recurrentes
+Comparacion (Como estoy parado?)
+   * evolucion en el tiempo
+   * comparacion con el promedio de su categoria en la zona
+   * rendimiento de la publicidad ( si pagan por destacar un evento, cuantas vistas y confirmaciones extra les trajo. esto es clave para que vuelvan a pagar)
+   * Una idea para el modelo de negocio: podés dar las métricas básicas (vistas y confirmaciones) en el plan más barato y dejar las avanzadas (perfil del público, comparación con la competencia, rendimiento de anuncios) para un plan superior. Así las propias estadísticas se vuelven un motivo para subir de plan.  (para mi NO. pinta que los negocios quieran comprarnos porque le agregamos valor, y no porque no tienen otra.)
+
+
+
+
+5. Registro e Inicio de Sesión
+Acceso como usuario
+•        Gratis.
+•        Con cuenta de Google (Gmail).
+•        Apple exige que, si se ofrece login con Google, en iPhone también haya una opción de login con enfoque en privacidad. Lo más simple es sumar “Iniciar sesión con Apple”.
+Acceso como empresa
+•        Suscripción mensual (monto a definir).
+•        Posibilidad de múltiples sucursales con planes disponibles.
+Cobro a empresas
+Apple y Google cobran una comisión (entre 15% y 30%) sobre ciertos pagos hechos dentro de la app. Lo más común y conveniente es que las empresas se suscriban y paguen desde la web (por ejemplo, con Mercado Pago), no desde la app.
+Pendiente: averiguar si cobrar por fuera de la app está permitido sin tener problemas con Apple, y definir cómo cobrar desde la web con la facturación correspondiente y todo en regla[a].
+
+
+Filtros de búsqueda
+•        Franja horaria.
+•        Tipo de evento (entretenimiento, gastronómico, deportivo, boliche, música, etc.).
+•        Rango de precio.
+•        Ubicación (rango de kilómetros).
+•        Dress code.
+Perfil de usuario
+•        Nombre y apellido.
+•        Barrio / radio de búsqueda / ubicación activa (a definir).
+•        Selección de preferencias al ingresar por primera vez.
+Asistencia
+Método de confirmación de asistencia a un evento. Permite ver quiénes más asisten y sus perfiles, lo que ayuda a generar vínculos.
+6. Pasos a Seguir
+Mes 1: Bases y diseño
+Semana 1
+   * Acuerdo entre socios. Es un contrato donde dejan por escrito qué porcentaje de la empresa tiene cada uno, qué aporta cada uno (plata, horas, código), cómo se toman las decisiones y qué pasa si alguien se quiere ir. Parece exagerado entre amigos, pero es lo que evita peleas cuando la app empieza a valer algo. Lo redacta el abogado.
+   * Chequear el nombre. Buscá "Planit" en el INPI, en App Store y Google Play, en dominios (la dirección web, como planit.com o planit.com.ar) y en redes sociales. Si está libre, comprá el dominio y reservá los usuarios ese mismo día, porque son baratos y cualquiera te los puede ganar.
+   * Reunión con el contador para definir la figura legal. Es decidir bajo qué forma existe el emprendimiento ante el Estado. LE PREGUNTO A MI TIA (STEF)
+Las opciones típicas:
+      * Monotributo: régimen simple para una persona. Sirve para arrancar solo, pero no para varios socios.
+      * SAS (Sociedad por Acciones Simplificada): es un tipo de empresa pensada para emprendimientos, con trámite más ágil que una sociedad tradicional. Tiene dos ventajas grandes: permite tener varios socios con sus porcentajes, y separa tu patrimonio personal del de la empresa (si la empresa tiene una deuda o un problema legal, en general no responden tus bienes personales fundamental entiendo.). Para ustedes es probablemente la mejor opción.
+      * Entrevistas con potenciales usuarios y empresas. Es hablar con gente real antes de gastar plata, para confirmar que el problema existe y que pagarían por la solución. Más detalles en la semana 3.
+
+
+Semana 2
+      * Iniciar la constitución de la SAS. Es el trámite para crear la empresa formalmente. Lo gestiona el contador o el abogado.
+      * Presentar la solicitud de marca en el INPI (Instituto Nacional de la Propiedad Industrial). Registrar la marca te da el derecho exclusivo a usar "Planit" en tu rubro, y a impedir que otro lo use. Algunas cosas a saber:
+      * Las marcas se registran por clases, que son categorías de productos y servicios. Para una app como esta, las relevantes suelen ser la de software, la de publicidad y la de servicios de entretenimiento. Cada clase se paga aparte.
+      * El trámite completo tarda meses, pero desde que presentás la solicitud tenés prioridad: si otro la pide después, vos vas primero.
+      * Una vez otorgada, dura 10 años y se renueva.
+      * Lo puede hacer el abogado o un agente de propiedad industrial (un profesional que se dedica a esto).
+      * Definir el MVP (Producto Mínimo Viable). Es la versión más simple de la app que igual resuelve el problema principal. La idea es lanzar rápido con lo esencial, aprender de cómo la usa la gente real y después agregar cosas, en vez de pasar un año construyendo todo y descubrir que a nadie le importaba la mitad. Para Planit, un MVP razonable sería: registro, mapa, búsqueda con filtros, confirmar asistencia (en privado) y panel de empresas. La parte social de ver quién va quedaría para la versión 2.
+Semana 3
+      * Pedir el número D-U-N-S. Es un número de 9 dígitos que otorga una empresa internacional llamada Dun & Bradstreet, y funciona como un "DNI internacional de empresas". Apple lo exige para publicar apps a nombre de una empresa, porque así verifica que la empresa existe de verdad. Algunas cosas a saber:
+      * Es gratis, y se pide desde la propia web de desarrolladores de Apple.
+      * Necesitás tener la sociedad ya constituida, porque te piden el nombre legal y la dirección exactamente como figuran en los papeles.
+      * Puede tardar desde algunos días hasta un par de semanas, por eso conviene pedirlo apenas se pueda.
+      * ¿Por qué publicar como empresa y no como persona? Porque en la tienda aparece "Planit SAS" como desarrollador en vez de tu nombre, da más confianza y la app queda a nombre de la sociedad y no de uno de los socios.
+      * Contratar al diseñador. Se encarga de dos cosas:
+      * Identidad visual: logo, colores, tipografía (el tipo de letra) y estilo general. Es la "cara" de la marca.
+      * Diseño de pantallas (UI/UX): cómo se ve cada pantalla de la app (UI, interfaz de usuario) y cómo se mueve la persona entre ellas para lograr lo que quiere de forma fácil (UX, experiencia de usuario). Es clave para tu objetivo de que encontrar un plan sea simple y no frustrante.
+      * Armar el recorrido del usuario y de la empresa. Es dibujar, aunque sea a mano, el camino paso a paso: "abro la app, veo el mapa, toco filtros, elijo música, toco un bar, confirmo asistencia". Se hace uno para el usuario y otro para la empresa. Esto le sirve al diseñador y a tu socio para saber exactamente qué hacer.
+      * Cerrar conclusiones de las entrevistas. Lo que buscás sacar en limpio:
+      * De los usuarios: si realmente les pasa lo de no saber qué hacer, y cómo lo resuelven hoy (Instagram, amigos, Google).
+      * De las empresas: cómo promocionan hoy sus eventos, cuánto gastan en eso y cuánto pagarían por Planit. Con eso definís el precio de la suscripción.
+      * Y una lista de empresas que dijeron "me interesa": son tus primeros clientes.
+Semana 4
+      * Prototipo navegable. El diseñador arma las pantallas en un programa de diseño (el más usado es Figma) y las conecta entre sí, para que se puedan tocar en el celular como si fuera la app, aunque por detrás no funcione nada: los eventos son de mentira y los botones solo llevan a otra pantalla. Parece la app, pero es una maqueta.
+      * Primera prueba: el prototipo. Se lo das a 5 a 8 personas y les pedís tareas concretas, por ejemplo "encontrá un bar con música en vivo cerca tuyo para esta noche". Mirás en silencio dónde dudan, dónde tocan algo equivocado o dónde se frustran, y no las ayudás. Es la prueba más barata que van a hacer: cambiar un diseño lleva horas, cambiar algo ya programado puede llevar semanas.
+      * Ajustar el diseño con lo que aprendieron, y recién ahí se pasa a programar.
+Mes 2: Desarrollo, legal y empresas → ver cuanto nos cobra un abogado, ver si de la nada le podemos dar % si es cercano. Invertir lo menor posible en MI opinion (stef)
+Semana 5 
+      * Tu socio arranca a programar sobre el diseño ya aprobado.
+      * Con el abogado:
+      * Términos y condiciones: las reglas de uso de la app. Qué se puede y qué no se puede hacer, qué pasa si alguien se porta mal, hasta dónde llega la responsabilidad de Planit (por ejemplo, si un evento se cancela o sale mal, la responsable es la empresa que lo organiza, no la app). Hacen falta dos: uno para usuarios y otro para empresas.
+      * Política de privacidad: explica qué datos personales juntan (nombre, mail, ubicación, preferencias), para qué los usan, con quién los comparten y cómo alguien puede pedir que se borren. Apple y Google exigen que esté publicada en una web.
+      * Registro de la base de datos ante la AAIP (Agencia de Acceso a la Información Pública). Es el organismo que controla el cumplimiento de la Ley 25.326 de Protección de Datos Personales. Si tu empresa guarda datos de personas, la ley pide inscribir esa base de datos en un registro nacional.
+      * Consulta sobre el cobro por fuera de la app. Apple y Google cobran una comisión (entre 15 y 30%) sobre ciertos pagos hechos dentro de la app, y tienen reglas estrictas sobre cómo se puede cobrar por fuera. El esquema más seguro suele ser que todo lo de pagos de empresas (planes, precios, suscripción) viva solo en la web, y que la app no venda nada ni tenga botones que lleven a pagar. Que el abogado lo confirme con las reglas vigentes al momento de lanzar.
+      * Con el contador:
+      * Facturación electrónica en ARCA. ARCA es el nuevo nombre de la AFIP. Cada vez que una empresa te pague la suscripción, tenés que emitirle factura.
+      * Cobro recurrente: que la suscripción se cobre sola todos los meses, por ejemplo con las suscripciones de Mercado Pago, en vez de estar pidiéndole a cada empresa que te transfiera.
+      * Crear las cuentas de desarrollador. Son las cuentas que te permiten publicar apps en cada tienda.
+      * Apple Developer Program: USD 99 por año, con el D-U-N-S, a nombre de la SAS.
+      * Google Play Console: USD 25, pago único. Ojo: si la cuenta es personal, Google exige que antes de publicar hagas una prueba cerrada con al menos 12 personas durante 14 días[b]. Con cuenta de empresa, eso no hace falta.
+Semana 6
+      * Desarrollo: registro, inicio de sesión y perfil de usuario.
+      * Salir a buscar empresas. Es la tarea más importante del mes. La meta es tener entre 30 y 50 lugares confirmados para el lanzamiento, todos en una zona concentrada (un par de barrios). ¿Por qué? Porque si lanzás en todo Buenos Aires con 40 lugares, el mapa se ve vacío y el usuario se va. Si lanzás en Palermo con 40 lugares, se ve lleno y vivo. Ofreceles los primeros meses gratis a cambio de que carguen eventos y te den su opinión.
+      * El diseñador entrega el ícono (el dibujito que aparece en la pantalla del celular) y el material para redes.
+Semana 7
+      * Desarrollo: mapa, búsqueda y filtros.
+      * Prueba interna semanal. Desde acá, todas las semanas el equipo usa lo que ya está programado como si fueran usuarios, y anota lo que falla o incomoda. Conviene tener una lista compartida (un Excel o una app de tareas alcanza) donde cada problema tenga: qué pasó, en qué celular, y los pasos para que vuelva a pasar. Esto último es clave: si tu socio no puede repetir el error, no lo puede arreglar.
+Semana 8
+      * Desarrollo: panel de empresas y confirmación de asistencia.
+      * Prueba con empresas. Te sentás con 2 o 3 dueños de locales y les pedís que carguen su local y un evento solos, sin ayuda. Muchas veces el dueño de un bar no es alguien muy técnico, así que si se traba, hay que simplificar.
+      * Cargar los textos legales en la app y en la web.
+      * Armar la landing page. Es una página web simple de una sola pantalla que explica qué es Planit, con capturas de la app, y un formulario de lista de espera donde la gente deja su mail para enterarse cuando salga. Sirve para medir interés, juntar gente para la beta y tener a quién avisarle el día del lanzamiento. Además, ahí vive la política de privacidad.
+
+
+Mes 3: Pruebas, ajustes y lanzamiento
+Semana 9: Versión completa y prueba interna a fondo
+      * Congelar funciones. A partir de acá no se agrega nada nuevo, solo se corrige lo que ya existe. Es una regla muy importante: la tentación de sumar "una cosita más" a último momento es lo que más atrasa los lanzamientos, y cada cosa nueva trae errores nuevos.
+      * Prueba en distintos celulares. La app puede andar perfecta en el iPhone de tu socio y fallar en un Android barato de hace 4 años. Prueben en iPhone nuevo y viejo, Android de gama alta y baja, y pantallas chicas y grandes.
+      * Prueba de situaciones raras. Los usuarios hacen cosas inesperadas, así que prueben: sin internet, con el GPS apagado, diciendo "no" cuando la app pide la ubicación, en una zona sin eventos, con un nombre de evento larguísimo. En cada caso la app no debería trabarse ni cerrarse, sino mostrar un mensaje claro.
+      * Prueba de privacidad. Verificar que nadie pueda ver la ubicación exacta de otra persona, que si la asistencia es privada nadie más la vea, y que al borrar la cuenta se borren de verdad los datos.
+      * Prueba del cobro. Hacer todo el camino de una empresa real: suscribirse, pagar con plata de verdad, recibir la factura, y cancelar la suscripción.
+      * Las empresas cargan sus eventos reales, para que en la beta y en el lanzamiento haya contenido de verdad.
+Semana 10: Beta cerrada
+      * ¿Qué es una beta cerrada? Es una versión casi final de la app que se le da solo a un grupo invitado, antes de publicarla para todo el mundo. Cada tienda tiene su herramienta:
+      * TestFlight (iPhone): es una app oficial de Apple. Los invitados la bajan, y desde ahí instalan tu versión de prueba.
+      * Prueba cerrada de Google Play (Android): los invitados reciben un link y la instalan desde Google Play como cualquier app, pero solo ellos la ven.
+      * A quién invitar: entre 30 y 50 personas de afuera del equipo, como amigos de amigos o gente de la lista de espera. Gente de afuera es importante porque ustedes ya saben cómo funciona todo y no se dan cuenta de lo que confunde.
+      * Qué pedirles: que la usen normalmente durante una semana, como lo harían de verdad, y que completen un formulario corto al final.
+      * Qué mirar: si la vuelven a abrir después del primer día, en qué pantalla abandonan, qué filtros usan y cuáles no toca nadie.
+Semana 11: Correcciones y envío a las tiendas
+      * Corregir con prioridades. Primero lo que rompe algo (la app se cierra, no se puede confirmar), después lo que molesta (algo lento o confuso). Lo que es "lindo de tener" queda anotado para la próxima versión.
+      * Prueba de repaso final. Recorrer todo de nuevo, usuario y empresa, después de las correcciones, porque a veces arreglar algo rompe otra cosa.
+      * Preparar la ficha de la tienda. Es la página que ve la gente antes de descargar la app:
+      * Nombre, descripción, ícono y capturas de pantalla.
+      * Clasificación por edad: respondés un cuestionario y la tienda le asigna una edad mínima a la app. Como van a aparecer boliches y bares, probablemente salga +17 o +18.
+      * Etiquetas de privacidad: es un cuestionario donde declarás qué datos junta la app y para qué (en Apple se ven como una "etiqueta nutricional" de datos, en Google se llama "Seguridad de los datos"). Tiene que coincidir con la política de privacidad.
+      * Cuenta de prueba para el revisor: un usuario y contraseña que funcione, para que la persona de Apple que revisa la app pueda entrar y probarla.
+      * Repasar los requisitos de Apple que más rechazos causan:
+      * Que el usuario pueda borrar su cuenta desde la misma app.
+      * Que esté la opción "Iniciar sesión con Apple", porque ofrecen login con Google.
+      * Un texto claro que explique por qué la app pide la ubicación (por ejemplo: "para mostrarte planes cerca tuyo").
+      * Si hay perfiles visibles, que se pueda denunciar y bloquear.
+      * Que no haya nada a medio hacer: botones que no hacen nada, pantallas "próximamente" o eventos de prueba.
+      * Enviar a revisión. En las dos tiendas, personas (y sistemas automáticos) revisan que la app cumpla sus reglas antes de publicarla. Apple suele tardar de uno a tres días y Google algo similar. Si rechazan, te dicen por qué, corregís y reenviás. Dejen margen para eso.
+Semana 12: Lanzamiento
+      * Publicar en la zona elegida.
+      * Difusión: mail a la lista de espera, contenido en redes mostrando planes reales de la zona, y pedirle a las empresas que se sumaron que lo compartan en sus redes (les conviene, porque es su propia vidriera).
+      * Monitoreo intensivo la primera semana. Estar muy atentos a errores, reseñas en las tiendas y mensajes de usuarios. Es normal y esperable sacar una actualización con correcciones en los primeros días: pasa hasta en las apps más grandes.
+Después del lanzamiento
+      * Revisar números cada una o dos semanas: descargas, usuarios que vuelven (la más importante: si bajan y no vuelven, algo no está funcionando), planes confirmados y empresas activas.
+      * Hablar con las empresas: si ven resultados con las métricas del panel, van a pagar cuando termine el período gratis.
+      * Planificar la versión 2 con lo aprendido, por ejemplo la función social de ver quién asiste.
+
+
+
+
+
+Referencias del mercado argentino (PROFUNDIZAR EN ESTUDIO DE MERCADO)
+Dos apps argentinas que les cobran a locales gastronómicos sirven de comparación. Woki, una plataforma de reservas para restaurantes, cobra por suscripción con planes que parten de los USD 100 mensuales. Fudo, un sistema de gestión para restaurantes, tiene planes que, según una comparativa de 2026, van de aproximadamente USD 39 a USD 130 por mes por sucursal. ecosistemastartupmadi-rest
+La diferencia clave es que esas herramientas el local las usa todos los días para operar: cobrar, tomar reservas, manejar la cocina. Planit, al menos al principio, es una vidriera: el local paga para que lo vean. Y mientras no tengas muchos usuarios, esa vidriera vale poco. Por eso Planit debería arrancar bastante más barato que ellos.
+Propuesta de precios
+Período de lanzamiento: gratis por 2 o 3 meses. Como vimos en la hoja de ruta, necesitás llenar el mapa antes de cobrar. Durante ese tiempo, las empresas ven sus métricas y comprueban si les sirve.
+Plan Básico: entre USD 15 y 25 por mes por local. Incluye perfil del local en el mapa, carga de eventos y métricas básicas (vistas y confirmaciones). Es un monto que un bar o un local chico paga sin pensarlo demasiado, parecido a lo que gastaría en una promoción corta en Instagram.
+Plan Pro: entre USD 40 y 60 por mes por local. Suma las métricas avanzadas (perfil del público, comparación con la zona, horarios pico) y uno o dos eventos destacados por mes incluidos.
+Eventos destacados, aparte: entre USD 5 y 15 por evento. Es la parte de publicidad de tu modelo de negocio. El local paga para que un evento aparezca primero en el inicio o resaltado en el mapa durante un fin de semana. Es ideal para quien no quiere pagar el Pro pero tiene una fecha especial.
+Varias sucursales: el primer local paga precio completo y los siguientes tienen descuento, por ejemplo 20 o 30% cada uno. Así no espantás a las cadenas, que son las que más pueden pagar.
+Pago anual: ofrecé dos meses gratis (pagan 10 y usan 12). A vos te da plata por adelantado, y a la empresa le da previsibilidad.
+Una alternativa a considerar: plan gratis permanente
+En vez de cobrar desde el primer día a todos, podés dejar que cualquier local tenga un perfil básico gratis para siempre (aparecer en el mapa con dirección, horarios y fotos), y cobrar solo por cargar eventos, destacarlos y ver métricas. La ventaja es que el mapa se llena mucho más rápido, lo que resuelve el problema del huevo y la gallina. La desventaja es que tardás más en facturar. Muchas apps de este tipo arrancan así y ajustan después.
+Sobre la moneda
+En Argentina conviene pensar el precio en dólares como referencia, pero cobrar en pesos (es lo que esperan los locales y lo más simple para facturar), ajustando cada 3 o 6 meses. Dejalo aclarado en los términos y condiciones para que el aumento no sea una sorpresa.
+Para validar estos números, en las entrevistas no preguntes "¿pagarías 20 dólares?", porque casi todos dicen que sí por compromiso. Preguntá cuánto gastan hoy en promocionar sus eventos (Instagram, volantes, influencers) y cuánto de eso les parece razonable mover a Planit. Esa respuesta te dice el precio real
+
+
+
+
+
+
+
+
+Por qué conviene tener publicidad además de la suscripción. La suscripción te da un ingreso fijo y previsible, pero tiene un techo: cada local paga lo mismo todos los meses. Los destacados te permiten ganar más con las empresas que tienen más presupuesto o una fecha importante (un show, una fiesta, la apertura de un local), sin subirle el precio a todos. Además, es una forma de ganar plata con los locales que no quieren suscribirse al plan más caro.
+Por qué no arrancaría con publicidad. Al principio vas a tener pocos usuarios, así que destacar un evento no le va a dar mucho resultado a la empresa, y si paga y no ve diferencia, se va a quejar o no va a volver a pagar. Además, con pocos locales en el mapa, "aparecer primero" no significa mucho. Lo lógico es lanzar solo con suscripción (o con el período gratis) y sumar los destacados cuando tengas un volumen de usuarios que haga que valga la pena pagarlos, por ejemplo unos meses después del lanzamiento.
+Un cuidado importante: que la publicidad no arruine la app. Si el que paga siempre aparece primero, sin importar si es lo que el usuario buscó, la gente deja de confiar en los resultados y la app pierde su valor, que es justamente encontrar el plan ideal para uno. Para evitarlo:
+      * Los destacados se muestran siempre marcados como "Destacado" o "Promocionado", para que el usuario sepa que es publicidad (además, es lo correcto frente a la ley de defensa del consumidor).
+      * Solo aparecen si coinciden con lo que el usuario busca. Si alguien filtra "gastronómico" a 2 km, no le podés poner primero un boliche a 10 km porque pagó.
+      * Hay un límite: por ejemplo, uno o dos destacados arriba de todo, y después los resultados normales ordenados por cercanía y preferencias.
+Formatos de publicidad que podés ofrecer más adelante:
+      * Evento destacado en la búsqueda: aparece primero cuando coincide con los filtros del usuario.
+      * Destacado en el inicio: aparece en la sección de recomendados del día.
+      * Pin destacado en el mapa: el ícono del local se ve más grande o de otro color.
+      * Notificación a usuarios de la zona: "Esta noche hay música en vivo a 1 km tuyo". Es el formato más valioso, pero hay que usarlo con mucha moderación, porque si la app manda demasiadas notificaciones, la gente la desinstala.
+En resumen: suscripción desde el lanzamiento (después del período gratis), publicidad cuando haya usuarios suficientes, y siempre transparente para no romper la confianza.
+
+
+[a]Averigue un poco y depende de lo que se este adquiriendo se puede, si es bien fisico si se puede(no es el caso) pero si es bien digital como membresia no se puede. Hay muchos grises y claramente es una tramoya que hacen todos, habria que hablar con teo capaz nos puede dar una mano porque problablemente sea un bache legal.
+[b]no entendi, osea como lo corroboran

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Cinemita</string>
+    <string name="title_activity_main">Cinemita</string>
+    <string name="package_name">com.cinemita.app</string>
+    <string name="custom_url_scheme">com.cinemita.app</string>
+</resources>

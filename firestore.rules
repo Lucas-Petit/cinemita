@@ -1,0 +1,82 @@
+rules_version = '2';
+
+// Cinemita — colecciones: `cinemas`, `users` (marcador anti-spam), `admins`.
+// - Lectura pública solo de cines APROBADOS; el dueño ve los suyos; el admin ve todo.
+// - Crear: requiere login, queda pendiente de aprobación, y exige que en el mismo
+//   batch se actualice users/{uid}.lastCinemaAt = ahora (anti-spam: 1 cine / 24 h).
+// - Editar: solo el dueño (sin poder cambiar ownerUid ni status); stats la puede
+//   incrementar cualquiera (métricas anónimas); el admin solo puede cambiar status.
+// - Borrar: dueño o admin.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    function isOwner() {
+      return signedIn() && resource.data.ownerUid == request.auth.uid;
+    }
+    function onlyStatsChange() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stats']);
+    }
+    function validCinema() {
+      return request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 120
+        && request.resource.data.lat is number
+        && request.resource.data.lng is number
+        && request.resource.data.screenings is list
+        && request.resource.data.screenings.size() <= 500;
+    }
+    function userDoc() {
+      return /databases/$(database)/documents/users/$(request.auth.uid);
+    }
+    // Anti-spam: la creación debe venir acompañada (mismo batch/transacción) de
+    // users/{uid}.lastCinemaAt = request.time, y el marcador previo debe tener
+    // más de 24 h (o no existir). El marker solo admite "ahora" (ver users).
+    function rateLimitOk() {
+      return getAfter(userDoc()).data.lastCinemaAt == request.time
+        && (!exists(userDoc())
+            || get(userDoc()).data.lastCinemaAt < request.time - duration.value(1, 'd'));
+    }
+
+    match /cinemas/{cinemaId} {
+      allow get: if resource.data.status == 'approved' || isOwner() || isAdmin();
+      allow list: if resource.data.status == 'approved'
+        || (signedIn() && resource.data.ownerUid == request.auth.uid)
+        || isAdmin();
+      allow create: if signedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && validCinema()
+        && rateLimitOk();
+      allow update: if (isOwner()
+          && request.resource.data.ownerUid == resource.data.ownerUid
+          && request.resource.data.status == resource.data.status
+          && validCinema())
+        || onlyStatsChange()
+        || (isAdmin()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+          && request.resource.data.status in ['approved', 'pending']);
+      allow delete: if isOwner() || isAdmin();
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      // El marcador solo puede escribirse con la hora del servidor: no se puede
+      // retroceder para saltear el cooldown.
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['lastCinemaAt'])
+        && request.resource.data.lastCinemaAt == request.time;
+      allow delete: if false;
+    }
+
+    match /admins/{uid} {
+      allow get: if signedIn() && request.auth.uid == uid;
+      allow list: if false;
+      allow write: if false; // altas de admin solo por consola/admin SDK
+    }
+  }
+}

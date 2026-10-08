@@ -2,30 +2,102 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Cinemita — Cines independientes de Buenos Aires</title>
+  <meta name="description" content="Mapa colaborativo de cines independientes de Buenos Aires con sus funciones semanales." />
+  <meta name="theme-color" content="#0b0c0f" />
+  <meta property="og:title" content="Cinemita — Cines independientes de Buenos Aires" />
+  <meta property="og:description" content="Mapa colaborativo de cines independientes: ubicación, cartelera semanal y funciones especiales." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_AR" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Cinemita" />
+  <meta name="twitter:description" content="Cines independientes de Buenos Aires en un mapa colaborativo." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header>
-    <h1>Cinemita</h1>
-    <p class="tagline">Cines independientes de Buenos Aires</p>
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="2" y="7" width="28" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2.5"/>
+        <circle cx="9" cy="16" r="1.6" fill="currentColor"/>
+        <circle cx="16" cy="16" r="1.6" fill="currentColor"/>
+        <circle cx="23" cy="16" r="1.6" fill="currentColor"/>
+      </svg>
+      <div class="brand-text">
+        <h1>Cinemita</h1>
+        <p class="tagline">Cines independientes de Buenos Aires</p>
+      </div>
+    </div>
     <div class="header-actions">
       <span id="demoBadge" class="hidden">Modo demo — los datos solo viven en este navegador</span>
-      <button id="locateBtn" class="btn secondary" title="Mostrar cines ordenados por distancia a tu ubicación">
+      <button id="locateBtn" class="btn ghost" title="Mostrar cines ordenados por distancia a tu ubicación">
         📍 Cerca de mí
       </button>
       <button id="registerBtn" class="btn primary">Registrar mi cine</button>
+      <button id="authBtn" class="btn ghost hidden">Ingresar con Google</button>
     </div>
   </header>
 
   <main>
     <aside id="sidebar">
+      <nav class="tabs">
+        <button class="tab active" data-tab="cinemas">Cines</button>
+        <button class="tab" data-tab="cartelera">Cartelera</button>
+        <button class="tab hidden" data-tab="pending" id="pendingTab">Pendientes</button>
+      </nav>
+
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 20 20" aria-hidden="true">
+          <circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="m14 14 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input id="searchInput" type="search" placeholder="Buscar cine o película…" autocomplete="off" />
+      </div>
+
+      <div id="cinemaControls">
+        <div class="chips">
+          <button id="todayChip" class="chip">Funciones hoy</button>
+        </div>
+        <div class="filters">
+          <select id="fPrice" aria-label="Filtrar por precio">
+            <option value="">Cualquier precio</option>
+          </select>
+          <select id="fTime" aria-label="Filtrar por franja horaria">
+            <option value="">Cualquier horario</option>
+          </select>
+          <select id="fRadius" aria-label="Filtrar por distancia">
+            <option value="0">Cualquier distancia</option>
+            <option value="1">A 1 km</option>
+            <option value="2">A 2 km</option>
+            <option value="5">A 5 km</option>
+            <option value="10">A 10 km</option>
+            <option value="25">A 25 km</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="carteleraControls" class="hidden">
+        <div class="day-chips" id="dayChips"></div>
+      </div>
+
       <h2 id="sidebarTitle">Todos los cines</h2>
       <div id="cinemaList" class="cinema-list">
-        <p class="empty">Cargando…</p>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
       </div>
+      <div id="carteleraList" class="cartelera-list hidden"></div>
+      <div id="pendingList" class="cinema-list hidden"></div>
+      <p class="legal-links">
+        <a href="terminos.html" target="_blank" rel="noopener">Términos y condiciones</a> ·
+        <a href="privacidad.html" target="_blank" rel="noopener">Política de privacidad</a>
+      </p>
     </aside>
     <div id="map"></div>
   </main>
@@ -42,7 +114,7 @@
         <label>Dirección
           <div class="address-row">
             <input type="text" name="address" maxlength="200" placeholder="Av. Corrientes 1234" />
-            <button type="button" id="searchAddressBtn" class="btn secondary small">Buscar</button>
+            <button type="button" id="searchAddressBtn" class="btn ghost small">Buscar</button>
           </div>
           <ul id="addrResults" class="addr-results hidden"></ul>
         </label>
@@ -52,8 +124,19 @@
         <label>Descripción
           <textarea name="description" maxlength="1000" rows="2" placeholder="Cine club barrial con programación de autor…"></textarea>
         </label>
+        <div class="form-row">
+          <label>Teléfono
+            <input type="tel" name="phone" maxlength="30" placeholder="+54 11 5555-1234" />
+          </label>
+          <label>WhatsApp
+            <input type="tel" name="whatsapp" maxlength="30" placeholder="+54 9 11 5555-1234" />
+          </label>
+        </div>
         <label>Sitio web
           <input type="text" name="website" maxlength="300" placeholder="micine.com.ar" />
+        </label>
+        <label>Imagen de portada (URL)
+          <input type="text" name="poster" maxlength="500" placeholder="https://…/portada.jpg" />
         </label>
         <p id="registerError" class="error hidden"></p>
         <button type="submit" id="registerSubmitBtn" class="btn primary">Registrar cine</button>
@@ -70,6 +153,7 @@
   </div>
 
   <script src="vendor/leaflet/leaflet.js"></script>
+  <script src="firebase-config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

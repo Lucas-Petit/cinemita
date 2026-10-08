@@ -1,0 +1,22 @@
+{
+  "appId": "com.cinemita.app",
+  "appName": "Cinemita",
+  "webDir": "public",
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "FirebaseAuthentication": {
+      "providers": ["google.com"]
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#0b0c0f"
+    },
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "backgroundColor": "#0b0c0f",
+      "androidScaleType": "CENTER_CROP"
+    }
+  }
+}
