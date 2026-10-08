@@ -192,7 +192,7 @@ export async function api(path, options = {}) {
         await batch.commit();
       } catch (e) {
         if (e?.code === 'permission-denied') {
-          throw new Error('No se pudo registrar: solo podés enviar un cine cada 24 h.');
+          throw new Error('No se pudo registrar: solo podés enviar un cine cada 30 minutos.');
         }
         throw e;
       }
@@ -219,7 +219,13 @@ export async function api(path, options = {}) {
     }
 
     if (method === 'DELETE' && id && !rest) {
-      await ownDoc(id);
+      // Dueño o admin pueden borrar un cine.
+      const user = requireUser();
+      const snap = await getDoc(cinemaRef(id));
+      if (!snap.exists()) throw new Error('Cine no encontrado');
+      if (snap.data().ownerUid !== user.uid && !(await isAdmin())) {
+        throw new Error('No autorizado');
+      }
       await deleteDoc(cinemaRef(id));
       return { ok: true };
     }

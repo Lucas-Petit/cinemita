@@ -703,16 +703,22 @@ function openPendingDetail(c) {
   bindModeration(c.id);
 }
 
-// Bloque de moderación: visible solo para admins sobre cines pendientes.
+// Bloque de moderación: visible solo para admins. En cines pendientes ofrece
+// aprobar/rechazar; en cualquier cine permite borrarlo.
 function moderationHtml(c) {
-  if (!state.isAdmin || c.status !== 'pending') return '';
-  return `
-    <div class="manage-section">
-      <h3>Moderación</h3>
+  if (!state.isAdmin) return '';
+  const review = c.status === 'pending' ? `
       <p class="hint">Este cine está pendiente — todavía no es público.</p>
       <div style="display:flex; gap:8px;">
         <button id="approveCinemaBtn" class="btn primary small">Aprobar y publicar</button>
         <button id="rejectCinemaBtn" class="btn danger small">Rechazar</button>
+      </div>` : '';
+  return `
+    <div class="manage-section">
+      <h3>Moderación</h3>
+      ${review}
+      <div style="margin-top:10px;">
+        <button id="adminDeleteBtn" class="btn danger small">Eliminar cine del mapa (admin)</button>
       </div>
       <p id="manageError" class="error hidden"></p>
     </div>`;
@@ -720,20 +726,31 @@ function moderationHtml(c) {
 
 function bindModeration(id) {
   const approveBtn = document.getElementById('approveCinemaBtn');
-  if (!approveBtn) return;
-  approveBtn.addEventListener('click', async () => {
-    approveBtn.disabled = true;
+  if (approveBtn) {
+    approveBtn.addEventListener('click', async () => {
+      approveBtn.disabled = true;
+      try {
+        await api(`api/cinemas/${id}/approve`, { method: 'POST' });
+        closeModals();
+        await reload();
+        if (state.tab === 'pending') renderPending();
+      } catch (e) { showManageError(e.message); approveBtn.disabled = false; }
+    });
+    document.getElementById('rejectCinemaBtn').addEventListener('click', async () => {
+      if (!confirm('¿Rechazar y eliminar este cine?')) return;
+      try {
+        await api(`api/cinemas/${id}/reject`, { method: 'POST' });
+        closeModals();
+        await reload();
+        if (state.tab === 'pending') renderPending();
+      } catch (e) { showManageError(e.message); }
+    });
+  }
+  const adminDelBtn = document.getElementById('adminDeleteBtn');
+  if (adminDelBtn) adminDelBtn.addEventListener('click', async () => {
+    if (!confirm('¿Eliminar este cine y todas sus funciones? (acción de admin)')) return;
     try {
-      await api(`api/cinemas/${id}/approve`, { method: 'POST' });
-      closeModals();
-      await reload();
-      if (state.tab === 'pending') renderPending();
-    } catch (e) { showManageError(e.message); approveBtn.disabled = false; }
-  });
-  document.getElementById('rejectCinemaBtn').addEventListener('click', async () => {
-    if (!confirm('¿Rechazar y eliminar este cine?')) return;
-    try {
-      await api(`api/cinemas/${id}/reject`, { method: 'POST' });
+      await api(`api/cinemas/${id}`, { method: 'DELETE' });
       closeModals();
       await reload();
       if (state.tab === 'pending') renderPending();
