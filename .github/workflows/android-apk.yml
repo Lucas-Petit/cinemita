@@ -31,6 +31,10 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      # Cachea la distribución de Gradle y las dependencias entre builds,
+      # y descarga con reintentos (mejor que el wrapper pelado).
+      - uses: gradle/actions/setup-gradle@v4
+
       # El secreto se pega tal cual: el contenido JSON completo, sin codificar.
       - name: Restore google-services.json (if secret set)
         if: ${{ env.GOOGLE_SERVICES_JSON != '' }}
