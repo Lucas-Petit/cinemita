@@ -36,7 +36,9 @@ export async function isAdmin() {
   if (adminCache === null) {
     try {
       adminCache = (await getDoc(doc(db, 'admins', auth.currentUser.uid))).exists();
-    } catch {
+      if (adminCache) console.info('Cinemita: sesión con permisos de admin');
+    } catch (e) {
+      console.warn('Cinemita: no se pudo verificar admin (¿reglas desactualizadas?)', e);
       adminCache = false;
     }
   }

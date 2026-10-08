@@ -755,10 +755,17 @@ body.page-legal {
   #sidebar { width: 100%; min-width: 0; max-height: 46%; order: 2; border-right: none; border-top: 1px solid var(--border); }
   #map { order: 1; min-height: 0; }
   .tagline { display: none; }
-  header { padding: calc(10px + env(safe-area-inset-top, 0px)) 12px 10px; gap: 10px; flex-wrap: wrap; }
-  .header-actions { flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
-  .header-actions .btn { padding: 8px 11px; font-size: 0.82rem; }
-  header h1 { font-size: 1.45rem; }
+  header { padding: calc(8px + env(safe-area-inset-top, 0px)) 12px 10px; gap: 8px; flex-wrap: wrap; }
+  /* Dos filas prolijas: marca arriba, botones abajo ocupando todo el ancho */
+  .brand { flex-basis: 100%; }
+  .header-actions { width: 100%; flex-wrap: nowrap; gap: 6px; }
+  .header-actions .btn {
+    flex: 1; min-width: 0; padding: 8px 4px; font-size: 0.8rem;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .header-actions .btn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  #demoBadge { flex-basis: 100%; order: -1; text-align: center; }
+  header h1 { font-size: 1.4rem; }
   #sidebar { padding-bottom: env(safe-area-inset-bottom, 0px); }
   #detailModal { padding: 0; align-items: flex-end; }
   #detailModal .modal-content {
