@@ -39,9 +39,10 @@ el admin puede cambiar `status` y borrar.
 - **Darte admin**: Firestore → colección `admins` → crear documento con ID =
   tu UID (Authentication → Users → copiar uid). Contenido irrelevante
   (ej. `{ "ok": true }`). Al volver a entrar a la app aparece la pestaña.
-- **Anti-spam**: máximo **1 cine cada 24 h por cuenta**, forzado por las reglas
-  de Firestore (el alta exige escribir `users/{uid}.lastCinemaAt` en el mismo
-  batch, y ese marcador solo admite la hora del servidor — no se puede falsear).
+- **Anti-spam**: máximo **1 cine cada 30 min por cuenta** (ajustable en
+  `firestore.rules`, `duration.value(...)`), forzado por las reglas — el alta
+  exige escribir `users/{uid}.lastCinemaAt` en el mismo batch, y ese marcador
+  solo admite la hora del servidor, no se puede falsear.
 - Aprobá más admins repitiendo el paso 2b con otros UIDs.
 
 ## 3. (Opcional) Cargar los cines de ejemplo
@@ -78,32 +79,33 @@ El botón "Ingresar" usa el plugin nativo. Requiere:
    → Android → package `com.cinemita.app` → descargar `google-services.json` →
    ponerlo en `android/app/` (el build lo detecta solo; está en .gitignore).
 2. **SHA-1 del certificado** que firmó el APK, agregado en esa app de Firebase:
-   - APK de release firmado con tu keystore → `keytool -list -v -keystore cinemita.keystore`
-   - APK de debug de CI → firmado con una clave nueva cada build; podés sacar su
-     SHA-1 con `apksigner verify --print-certs app-debug.apk`, o simplemente usar
-     la build de release (recomendado).
+   - Keystore de release ya generado (`android/app/cinemita.keystore`) →
+     `AB:2D:37:FD:15:1F:2C:5D:0C:24:17:BA:2C:C9:56:61:D5:E5:6A:A1`
+   - APK de debug de CI → firmado con una clave nueva cada build; el workflow
+     imprime el SHA-1 en sus logs (paso "Print APK signing SHA-1").
    - Si publicás en Play Store, además hay que agregar el SHA-1 del *app signing
      key* de Play Console (Play re-firma el bundle) y re-descargar el json.
 
 Sin `google-services.json` el APK compila igual y funciona todo menos el login.
 
-## 6. Firma de release (para distribuir fuera del CI de debug)
+## 6. Firma de release
 
-```bash
-keytool -genkeypair -v -keystore cinemita.keystore -alias cinemita \
-  -keyalg RSA -keysize 2048 -validity 10000
-```
+El keystore ya está generado en `android/app/cinemita.keystore` (PKCS12, hecho
+con OpenSSL — no hace falta keytool). Las contraseñas y el SHA-1 están en
+`keystore-secrets.txt` (gitignored). **Guardalo a salvo**: sin el keystore no
+podés publicar actualizaciones.
 
-- **Local**: copiar `cinemita.keystore` a `android/app/` y exportar
-  `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD` → `gradlew assembleRelease`.
-- **GitHub Actions**: subir como secrets (Settings → Secrets → Actions):
-  `KEYSTORE_BASE64` (`base64 cinemita.keystore`), `KEYSTORE_PASSWORD`,
-  `KEY_ALIAS`, `KEY_PASSWORD`. El workflow genera `app-release.apk` y
-  `app-release.aab` firmados.
-- Opcional: `GOOGLE_SERVICES_JSON` como secret (base64) para que el CI incluya el
-  archivo en la build.
-
-**Guardá el keystore a salvo**: sin él no podés publicar actualizaciones.
+- **GitHub Actions**: en el repo → Settings → Secrets and variables → Actions:
+  - `GOOGLE_SERVICES_JSON`: pegar el contenido del archivo **tal cual**
+    (texto plano, multi-línea — GitHub lo acepta sin problema).
+  - `KEYSTORE_BASE64`: el bloque largo de `keystore-secrets.txt` (el keystore
+    es binario → por eso sí va en base64; el JSON no).
+  - `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`: los del archivo.
+  Con los 4 secrets puestos, el CI genera `app-release.apk` y `app-release.aab`
+  firmados con tu clave real.
+- **Local** (si algún día instalás Android Studio): el keystore ya está en su
+  lugar; `gradlew assembleRelease` con `KEYSTORE_PASSWORD`/`KEY_ALIAS`/
+  `KEY_PASSWORD` como variables de entorno.
 
 ## 7. Play Store (opcional, USD 25 una vez)
 

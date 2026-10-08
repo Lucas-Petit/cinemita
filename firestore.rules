@@ -39,7 +39,7 @@ service cloud.firestore {
     function rateLimitOk() {
       return getAfter(userDoc()).data.lastCinemaAt == request.time
         && (!exists(userDoc())
-            || get(userDoc()).data.lastCinemaAt < request.time - duration.value(1, 'd'));
+            || get(userDoc()).data.lastCinemaAt < request.time - duration.value(30, 'm'));
     }
 
     match /cinemas/{cinemaId} {

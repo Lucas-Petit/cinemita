@@ -31,9 +31,10 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      # El secreto se pega tal cual: el contenido JSON completo, sin codificar.
       - name: Restore google-services.json (if secret set)
         if: ${{ env.GOOGLE_SERVICES_JSON != '' }}
-        run: echo "$GOOGLE_SERVICES_JSON" | base64 -d > android/app/google-services.json
+        run: echo "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
 
       - name: Install dependencies & sync Capacitor
         run: |

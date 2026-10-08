@@ -5,3 +5,4 @@ android/app/google-services.json
 *.keystore
 *.jks
 serviceAccount*.json
+keystore-secrets.txt
