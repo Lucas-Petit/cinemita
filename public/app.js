@@ -1403,8 +1403,8 @@ function renderAuthBtn() {
     btn.innerHTML = `${avatar}<span>${esc(state.user.displayName || state.user.email || 'Cuenta')}</span>`;
     btn.title = 'Cerrar sesión';
   } else {
-    btn.textContent = 'Ingresar con Google';
-    btn.title = '';
+    btn.textContent = 'Ingresar';
+    btn.title = 'Ingresar con Google';
   }
 }
 

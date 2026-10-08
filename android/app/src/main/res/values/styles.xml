@@ -18,5 +18,11 @@
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
         <item name="android:background">@drawable/splash</item>
+        <!-- Android 15 fuerza edge-to-edge con targetSdk 35+: esta flag evita que
+             el contenido quede tapado por la barra de estado. En Android 16+ la
+             ignora — ahí cubre el caso el safe-area-inset en el CSS. -->
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
+        <item name="android:statusBarColor">#0b0c0f</item>
+        <item name="android:navigationBarColor">#0b0c0f</item>
     </style>
 </resources>

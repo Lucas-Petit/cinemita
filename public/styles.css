@@ -16,7 +16,7 @@
   --shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
 }
 
-html, body { height: 100%; }
+html, body { height: 100%; overflow-x: clip; }
 
 body {
   font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
@@ -39,7 +39,8 @@ header {
   display: flex;
   align-items: center;
   gap: 18px;
-  padding: 11px 22px;
+  /* safe-area-inset-top: en Android edge-to-edge la barra de estado tapa el header */
+  padding: calc(11px + env(safe-area-inset-top, 0px)) 22px 11px;
   background: var(--glass);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -754,13 +755,17 @@ body.page-legal {
   #sidebar { width: 100%; min-width: 0; max-height: 46%; order: 2; border-right: none; border-top: 1px solid var(--border); }
   #map { order: 1; min-height: 0; }
   .tagline { display: none; }
-  header { padding: 10px 14px; gap: 10px; flex-wrap: wrap; }
+  header { padding: calc(10px + env(safe-area-inset-top, 0px)) 12px 10px; gap: 10px; flex-wrap: wrap; }
+  .header-actions { flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+  .header-actions .btn { padding: 8px 11px; font-size: 0.82rem; }
   header h1 { font-size: 1.45rem; }
+  #sidebar { padding-bottom: env(safe-area-inset-bottom, 0px); }
   #detailModal { padding: 0; align-items: flex-end; }
   #detailModal .modal-content {
     width: 100%;
     height: auto;
     max-height: 80vh;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     border-radius: 18px 18px 0 0;
     animation: slideUp 0.25s cubic-bezier(0.32, 0.72, 0.35, 1);
   }
